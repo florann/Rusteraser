@@ -18,12 +18,11 @@
 
 .sideBarItem
   {
+    width: 100%;
     font-size: 10pt;
     border-bottom: 1px solid #282727;
     background-size: 0% 100%;
     transition: ease-in-out 0.2s;
-    padding-left: 10px;
-    padding-right: 10px;
   }
 .sideBarItem:hover
 {

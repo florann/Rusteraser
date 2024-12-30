@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./Sidebar.css";
+import { DiskInfo } from "../../interfaces/DiskInfo";
+import DetailSideBar from "../DetailSideBar/DetailSideBar";
 
-interface DiskInfo {
-    name: string;
-    total_space: number;
-    available_space: number;
-    available_percentage: number;
-    usage_percentage: number;
-  }
-  
+
 function Sidebar() {
 
     const [activeIndex, setActiveIndex] = React.useState<number | null>(null); // Track active index
@@ -48,20 +43,22 @@ function Sidebar() {
     <div className="sideBar">
     <div className="sideBarTitle">Disks</div>
     {scannedDisks.map((disk, index) => (
-        <div className={`sideBarItem ${activeIndex === index ? " selected" : ""}`}
-        key={index}  onClick={() => handleClick(index)} 
-        style={{
-                // Single, uniform color from our helper:
-                backgroundColor: getUsageColor(disk.usage_percentage),
-                // Optionally, transition background changes:
-                transition: "background-color 0.5s ease-in-out",
-          }}>
-            <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
-          
-            {/* {'['}
-            {(disk.total_space / (1024 * 1024 * 1024)).toFixed(2)} GB /&nbsp;
-            {(disk.available_space / (1024 * 1024 * 1024)).toFixed(2)} GB
-            {']'} */}
+        <div style={{flexDirection: "column"}}>
+          <div className={`sideBarItem ${activeIndex === index ? " selected" : ""}`}
+          key={index}  onClick={() => handleClick(index)} 
+          style={{
+                  // Single, uniform color from our helper:
+                  backgroundColor: getUsageColor(disk.usage_percentage),
+                  // Optionally, transition background changes:
+                  transition: "background-color 0.5s ease-in-out",
+            }}>
+              <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
+              {/* {'['}
+              {(disk.total_space / (1024 * 1024 * 1024)).toFixed(2)} GB /&nbsp;
+              {(disk.available_space / (1024 * 1024 * 1024)).toFixed(2)} GB
+              {']'} */}
+          </div>
+          <DetailSideBar diskInfo={disk} isHidden={activeIndex === index ? false : true}></DetailSideBar>
         </div>
     ))}
     </div>

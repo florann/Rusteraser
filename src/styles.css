@@ -116,3 +116,8 @@ button {
   background-color: black;
   width: 80%;
 }
+
+.hidden
+{
+  display: none !important;
+}

@@ -1,0 +1,7 @@
+.detailSideBar
+{
+    flex-direction: column;
+    font-size: 10pt;
+    white-space: nowrap;
+    overflow: auto;
+}
