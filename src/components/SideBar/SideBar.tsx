@@ -3,6 +3,9 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./Sidebar.css";
 import { DiskInfo } from "../../interfaces/DiskInfo";
 import DetailSideBar from "../DetailSideBar/DetailSideBar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHardDrive } from '@fortawesome/free-regular-svg-icons'
+
 
 
 function Sidebar() {
@@ -41,7 +44,12 @@ function Sidebar() {
 
   return (
     <div className="sideBar">
-    <div className="sideBarTitle">Disks</div>
+    <div className="sideBarTitle">
+      <div>
+        <FontAwesomeIcon icon={faHardDrive}></FontAwesomeIcon>
+      </div>
+      <div style={{paddingLeft: "5px"}} >Disks</div>
+    </div>
     {scannedDisks.map((disk, index) => (
         <div style={{flexDirection: "column"}}>
           <div className={`sideBarItem ${activeIndex === index ? " selected" : ""}`}
