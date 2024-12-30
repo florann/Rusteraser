@@ -111,49 +111,6 @@ button {
   }
 }
 
-.sideBar * {
-  display: flex;
-}
-
-.sideBar
-{
-  justify-content: left;
-  width: 20%;
-}
-
-.sideBarItem
-{
-  font-size: 10pt;
-  border-top: 1px solid #282727;
-  border-bottom: 1px solid #282727;
-  transition: ease-in-out 0.2s;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.sideBarItem:hover
-{
-  background-color: #3d3d3d;
-}
-
-.sideBarItem.selected
-{
-  background-color: #828181;
-  animation: growAndShrink 0.2s ease-in-out; 
-}
-
-@keyframes growAndShrink {
-  0% {
-    font-size: 10pt; /* Original size */
-  }
-  50% {
-    font-size: 11pt; /* Larger size at peak */
-  }
-  100% {
-    font-size: 10pt; /* Back to original size */
-  }
-}
-
 .mainContent
 {
   background-color: black;

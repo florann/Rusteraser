@@ -1,0 +1,50 @@
+
+.sideBar * {
+    display: flex;
+  }
+
+  .sideBar
+  {
+    justify-content: left;
+    width: 20%;
+    background-color: #828181;
+  }
+  
+  .sideBarTitle
+  {
+    justify-content: center;
+    border-bottom: 1px solid #282727;
+  }
+
+.sideBarItem
+  {
+    font-size: 10pt;
+    border-bottom: 1px solid #282727;
+    background-size: 0% 100%;
+    transition: ease-in-out 0.2s;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+.sideBarItem:hover
+{
+    background-color: #3d3d3d;
+}
+  
+.sideBarItem.selected
+{
+    background-color: #828181;
+    animation: growAndShrink 0.2s ease-in-out; 
+}
+  
+  @keyframes growAndShrink {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05); /* slightly larger scale at peak */
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
