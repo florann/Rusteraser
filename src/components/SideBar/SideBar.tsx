@@ -52,9 +52,8 @@ function Sidebar() {
       </div>
       <div className="containerAllSideBarItems">
       {scannedDisks.map((disk, index) => (
-          <div className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
+          <div key={index}  onClick={() => handleClick(index)}  className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
             <div 
-            key={index}  onClick={() => handleClick(index)} 
             style={{}}>
                 <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
             </div>
