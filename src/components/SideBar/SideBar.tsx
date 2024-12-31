@@ -44,31 +44,24 @@ function Sidebar() {
 
   return (
     <div className="sideBar">
-    <div className="sideBarTitle">
-      <div>
-        <FontAwesomeIcon icon={faHardDrive}></FontAwesomeIcon>
-      </div>
-      <div style={{paddingLeft: "5px"}} >Disks</div>
-    </div>
-    {scannedDisks.map((disk, index) => (
-        <div style={{flexDirection: "column"}}>
-          <div className={`sideBarItem ${activeIndex === index ? " selected" : ""}`}
-          key={index}  onClick={() => handleClick(index)} 
-          style={{
-                  // Single, uniform color from our helper:
-                  backgroundColor: getUsageColor(disk.usage_percentage),
-                  // Optionally, transition background changes:
-                  transition: "background-color 0.5s ease-in-out",
-            }}>
-              <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
-              {/* {'['}
-              {(disk.total_space / (1024 * 1024 * 1024)).toFixed(2)} GB /&nbsp;
-              {(disk.available_space / (1024 * 1024 * 1024)).toFixed(2)} GB
-              {']'} */}
-          </div>
-          <DetailSideBar diskInfo={disk} isHidden={activeIndex === index ? false : true}></DetailSideBar>
+      <div className="sideBarTitle">
+        <div>
+          <FontAwesomeIcon icon={faHardDrive}></FontAwesomeIcon>
         </div>
-    ))}
+        <div style={{paddingLeft: "5px"}} >Disks</div>
+      </div>
+      <div className="containerAllSideBarItems">
+      {scannedDisks.map((disk, index) => (
+          <div className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
+            <div 
+            key={index}  onClick={() => handleClick(index)} 
+            style={{}}>
+                <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
+            </div>
+            <DetailSideBar diskInfo={disk} isHidden={activeIndex === index ? false : true}></DetailSideBar>
+          </div>
+      ))}
+      </div>
     </div>
   );
 }

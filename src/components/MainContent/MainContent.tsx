@@ -9,8 +9,8 @@ function MainContent() {
     }, []); // The empty dependency array ensures this runs only once (on mount)
 
   return (
-    <div>
-    
+    <div className="mainContent">
+
     </div>
   );
 }
