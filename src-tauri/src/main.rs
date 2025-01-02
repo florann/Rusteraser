@@ -2,10 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod disk;
 mod helper;
+mod file;
+mod folder;
 
 use walkdir::WalkDir;
 use sysinfo::{DiskExt, System, SystemExt};
 use disk::diskInfo::DiskInfo;
+use file::fileInfo::FileInfo;
+//use folder::folderInfo::FolderInfo;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -51,13 +55,14 @@ fn scan_all(path: &str, _app_handle: tauri::AppHandle) {
                 // If file
                 if success.file_type().is_file() {
 
+                    let mut file = FileInfo::default();
                     if let Some(extension) = success.path().extension() {
-
+                        file.extension = extension.to_string_lossy().to_string();
                     }
                     /* Retrieving the file */
                     if let Some(name) = success.file_name().to_str() {
-                        print!("{}", name.to_string());
-                        vector.push(name.to_string()); // Convert &str to String
+                        file.name = name.to_string();
+                        //vector.push(name.to_string()); // Convert &str to String
                     }
                 }
                 // if dir

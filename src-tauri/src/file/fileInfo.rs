@@ -1,5 +1,6 @@
+use serde::Serialize;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct FileInfo {
     pub name: String,
     pub extension: String,
