@@ -5,6 +5,7 @@ mod helper;
 mod file;
 mod folder;
 
+use std::fs::{metadata, Metadata};
 use walkdir::WalkDir;
 use sysinfo::{DiskExt, System, SystemExt};
 use disk::diskInfo::DiskInfo;
@@ -64,6 +65,8 @@ fn scan_all(path: &str, _app_handle: tauri::AppHandle) {
                         file.name = name.to_string();
                         //vector.push(name.to_string()); // Convert &str to String
                     }
+
+                    file.size = metadata(success.path()).map(|metadata| metadata.len()).unwrap_or(0);
                 }
                 // if dir
                 else if success.file_type().is_dir() {
