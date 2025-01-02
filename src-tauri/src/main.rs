@@ -5,7 +5,7 @@ mod helper;
 
 use walkdir::WalkDir;
 use sysinfo::{DiskExt, System, SystemExt};
-use disk::info::DiskInfo;
+use disk::diskInfo::DiskInfo;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -37,28 +37,44 @@ fn scan_disk() -> Vec<DiskInfo> {
 }
 
 #[tauri::command]
-fn scan_directory(path: &str) -> Vec<String> {
+fn scan_all(path: &str, _app_handle: tauri::AppHandle) {
     print!("{}",path);
+    if !std::path::Path::new(path).exists() {
+        format!("Path does not exist: {}", path);
+    }
+
     let mut vector: Vec<String> = Vec::new();
-    for entity in WalkDir::new(path).max_depth(0) {
+    for entity in WalkDir::new(path).max_depth(1) {
         match entity {
             Ok(success) => {
-                if let Some(name) = success.file_name().to_str() {
-                    print!("{}", name.to_string());
-                    vector.push(name.to_string()); // Convert &str to String
+              
+                // If file
+                if success.file_type().is_file() {
+
+                    if let Some(extension) = success.path().extension() {
+
+                    }
+                    /* Retrieving the file */
+                    if let Some(name) = success.file_name().to_str() {
+                        print!("{}", name.to_string());
+                        vector.push(name.to_string()); // Convert &str to String
+                    }
                 }
+                // if dir
+                else if success.file_type().is_dir() {
+                    
+                } 
             },
             Err(_err) => {
                 //nothing
             }
         }
     }
-    vector
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, scan_directory, scan_disk])
+        .invoke_handler(tauri::generate_handler![greet, scan_all, scan_disk])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

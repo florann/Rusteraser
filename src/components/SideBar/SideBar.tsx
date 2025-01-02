@@ -16,8 +16,13 @@ function Sidebar() {
     const [scannedDisks, setScanDisk] = useState<DiskInfo[]>([]);
     async function scan_disk()
     {
-        setScanDisk(await invoke("scan_disk"));
-        scannedDisks
+      setScanDisk(await invoke("scan_disk"));
+    }
+
+    const [scanItems, setScanItems] = useState("");
+    async function scan_all(path: string)
+    {
+      setScanItems(await invoke("scan_all", {path}));
     }
   
     const handleClick = (index: number) => {
@@ -52,7 +57,7 @@ function Sidebar() {
       </div>
       <div className="containerAllSideBarItems">
       {scannedDisks.map((disk, index) => (
-          <div key={index}  onClick={() => handleClick(index)}  className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
+          <div key={index}  onClick={() => {handleClick(index), scan_all("C:\\")}}  className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
             <div 
             style={{}}>
                 <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
