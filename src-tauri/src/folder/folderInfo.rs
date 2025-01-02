@@ -1,3 +1,4 @@
+use crate::traits::Info::Info;
 use serde::Serialize;
 
 #[derive(Debug, Serialize, Default)]
@@ -7,6 +8,25 @@ pub struct FolderInfo {
     pub path: String,
     pub size: u64,
     pub nb_elements: u64
+}
+
+// Implement the `Info` trait for `FolderInfo`
+impl Info for FolderInfo {
+    fn name(&self) -> &String {
+        &self.name
+    }
+
+    fn parent(&self) -> &String {
+        &self.parent
+    }
+
+    fn size(&self) -> &u64 {
+        &self.size
+    }
+
+    fn path(&self) -> &String {
+        &self.path
+    }
 }
 
 impl FolderInfo {

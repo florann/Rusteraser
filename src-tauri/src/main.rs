@@ -4,6 +4,7 @@ mod disk;
 mod helper;
 mod file;
 mod folder;
+mod traits;
 
 use std::fs::{metadata, Metadata};
 use walkdir::WalkDir;
