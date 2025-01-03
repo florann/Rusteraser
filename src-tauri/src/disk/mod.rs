@@ -1,1 +1,1 @@
-pub mod diskInfo;
+pub mod disk_info;

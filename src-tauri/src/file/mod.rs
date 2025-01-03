@@ -1,1 +1,1 @@
-pub mod fileInfo;
+pub mod file_info;

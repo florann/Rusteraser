@@ -1,1 +1,1 @@
-pub mod folderInfo;
+pub mod folder_info;
