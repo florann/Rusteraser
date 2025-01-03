@@ -6,7 +6,10 @@ mod file;
 mod folder;
 mod traits;
 
-use std::fs::{metadata, Metadata};
+use std::{fs::{metadata, Metadata}};
+use folder::folderInfo::FolderInfo;
+use tauri::Manager;
+use traits::Info::Info;
 use walkdir::WalkDir;
 use sysinfo::{DiskExt, System, SystemExt};
 use disk::diskInfo::DiskInfo;
@@ -43,17 +46,16 @@ fn scan_disk() -> Vec<DiskInfo> {
 }
 
 #[tauri::command]
-fn scan_all(path: &str, _app_handle: tauri::AppHandle) {
+fn scan_all(path: &str, app_handle: tauri::AppHandle) {
     print!("{}",path);
     if !std::path::Path::new(path).exists() {
         format!("Path does not exist: {}", path);
     }
 
-    let mut vector: Vec<String> = Vec::new();
     for entity in WalkDir::new(path).max_depth(1) {
         match entity {
             Ok(success) => {
-              
+                let entity_info: Box<dyn Info>;
                 // If file
                 if success.file_type().is_file() {
 
@@ -61,24 +63,35 @@ fn scan_all(path: &str, _app_handle: tauri::AppHandle) {
                     if let Some(extension) = success.path().extension() {
                         file.extension = extension.to_string_lossy().to_string();
                     }
-                    /* Retrieving the file */
                     if let Some(name) = success.file_name().to_str() {
                         file.name = name.to_string();
-                        //vector.push(name.to_string()); // Convert &str to String
                     }
-
                     file.size = metadata(success.path()).map(|metadata| metadata.len()).unwrap_or(0);
+                    file.path = success.path().to_string_lossy().to_string();
+
+                    entity_info = Box::new(file);
                 }
                 // if dir
                 else if success.file_type().is_dir() {
-                    
+                    let mut folder = FolderInfo::default();
+
+                    folder.name = success.file_name().to_str().map(|name| name.to_string()).unwrap_or_default();
+                    folder.path = success.path().to_string_lossy().to_string();
+                    folder.size = metadata(success.path()).map(|metadata| metadata.len()).unwrap_or(0);
+
+                    //vector.push(Box::new(folder));
+
+                    entity_info = Box::new(folder);
                 } 
+
+                app_handle.emit_all("data-chunk", entity_info).expect("Failed to emit data chunk");
             },
             Err(_err) => {
                 //nothing
             }
         }
     }
+
 }
 
 fn main() {
