@@ -3,6 +3,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
 import "./MainContent.css";
 
+import Entity from "../Entity/Entity";
+
 function MainContent() {
     // State to store received data chunks
     const [dataChunks, setDataChunks] = useState<string[]>([]);
@@ -24,7 +26,7 @@ function MainContent() {
     <div className="mainContent">
       {dataChunks.map((chunk, index) => (
         <div>
-          {chunk.toString()}
+          <Entity index={index} str_EntityInfo={chunk}></Entity>
         </div>
       ))}
     </div>
