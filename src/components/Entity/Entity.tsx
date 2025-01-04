@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { EntityInfo, isEntityInfo} from "../../type/typeEntityInfo";
-//import "./example.css";
+import "./Entity.css";
 
 interface EntityProps {
     index: number,
@@ -31,22 +31,46 @@ function Entity({index, obj_EntityInfo}: EntityProps) {
   return (
     <div key={index} className="dataChunk">
       {entityInfo.type === "File" ? (
-        <div>
-          <strong>Type:</strong> {entityInfo.type} <br />
-          <strong>Name:</strong> {entityInfo.name} <br />
-          <strong>Extension:</strong> {entityInfo.extension} <br />
-          <strong>Path:</strong> {entityInfo.path} <br />
-          <strong>Parent:</strong> {entityInfo.parent} <br />
-          <strong>Size:</strong> {entityInfo.size} bytes
+        <div className="entity">
+          <div>
+            <strong>Type:</strong> {entityInfo.type}
+          </div>
+          <div>
+            <strong>Name:</strong> {entityInfo.name}
+          </div>
+          <div>
+            <strong>Extension:</strong> {entityInfo.extension} 
+          </div>
+          <div>
+            <strong>Path:</strong> {entityInfo.path} 
+          </div>
+          <div>
+            <strong>Parent:</strong> {entityInfo.parent} 
+          </div>
+          <div>
+            <strong>Size:</strong> {entityInfo.size} bytes
+          </div>
         </div>
       ) : (
-        <div>
-          <strong>Type:</strong> {entityInfo.type} <br />
-          <strong>Name:</strong> {entityInfo.name} <br />
-          <strong>Path:</strong> {entityInfo.path} <br />
-          <strong>Parent:</strong> {entityInfo.parent} <br />
-          <strong>Size:</strong> {entityInfo.size} bytes <br />
-          <strong>Number of Elements:</strong> {entityInfo.nb_elements}
+        <div className="entity">
+          <div>
+            <strong>Type:</strong> {entityInfo.type} 
+          </div>
+          <div>
+            <strong>Name:</strong> {entityInfo.name} 
+          </div>
+          <div>
+            <strong>Path:</strong> {entityInfo.path} 
+          </div>
+          <div>
+            <strong>Parent:</strong> {entityInfo.parent} 
+          </div>
+          <div>
+            <strong>Size:</strong> {entityInfo.size} bytes 
+          </div>
+          <div>
+            <strong>Number of Elements:</strong> {entityInfo.nb_elements}
+          </div>
         </div>
       )}
   </div>
