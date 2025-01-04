@@ -7,7 +7,7 @@ import Entity from "../Entity/Entity";
 
 function MainContent() {
     // State to store received data chunks
-    const [dataChunks, setDataChunks] = useState<string[]>([]);
+    const [dataChunks, setDataChunks] = useState<object[]>([]);
 
 
     /* Run on load */
@@ -16,7 +16,7 @@ function MainContent() {
       listen('scan-data-chunk', (event) => {
         console.log("Event payload");
         console.log(event.payload);
-        setDataChunks((prevChunks) => [...prevChunks, event.payload as string]);
+        setDataChunks((prevChunks) => [...prevChunks, event.payload as object]);
       });
       
 
@@ -26,7 +26,7 @@ function MainContent() {
     <div className="mainContent">
       {dataChunks.map((chunk, index) => (
         <div>
-          <Entity index={index} str_EntityInfo={chunk}></Entity>
+          <Entity index={index} obj_EntityInfo={chunk}></Entity>
         </div>
       ))}
     </div>

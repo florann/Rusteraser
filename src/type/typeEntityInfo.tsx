@@ -15,3 +15,31 @@ export type EntityInfo =
       size: number;
       nb_elements: number;
     };
+
+
+    // Type guard function
+export function isEntityInfo(obj: any): obj is EntityInfo {
+  if (!obj || typeof obj !== "object") return false;
+
+  if (obj.type === "File") {
+    return (
+      typeof obj.name === "string" &&
+      typeof obj.extension === "string" &&
+      typeof obj.path === "string" &&
+      typeof obj.parent === "string" &&
+      typeof obj.size === "number"
+    );
+  }
+
+  if (obj.type === "Folder") {
+    return (
+      typeof obj.name === "string" &&
+      typeof obj.path === "string" &&
+      typeof obj.parent === "string" &&
+      typeof obj.size === "number" &&
+      typeof obj.nb_elements === "number"
+    );
+  }
+
+  return false;
+}

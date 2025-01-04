@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import { EntityInfo } from "../../type/typeEntityInfo";
+import { EntityInfo, isEntityInfo} from "../../type/typeEntityInfo";
 //import "./example.css";
 
 interface EntityProps {
     index: number,
-    str_EntityInfo: string
+    obj_EntityInfo: object
 }
 
-function Entity({index, str_EntityInfo}: EntityProps) {
+function Entity({index, obj_EntityInfo}: EntityProps) {
 
     const [entityInfo, setEntityInfo] = useState<EntityInfo | null>(null);
 
     /* Run on load */
     useEffect(() => {
       try {
-        const parsedEntity = JSON.parse(str_EntityInfo) as EntityInfo;
-        setEntityInfo(parsedEntity); // Update state with parsed object
+
+        if(isEntityInfo(obj_EntityInfo)){
+            setEntityInfo(obj_EntityInfo); // Update state with parsed object
+        }
       } catch (error) {
         console.error("Failed to parse EntityInfo:", error);
       }
-    }, [str_EntityInfo]); // Re-run if str_EntityInfo changes
+    }, [obj_EntityInfo]); // Re-run if str_EntityInfo changes
 
     if (!entityInfo) {
       return <div>Loading...</div>;
