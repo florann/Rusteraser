@@ -5,27 +5,20 @@ import "./Entity.css";
 
 interface EntityProps {
     index: number,
-    obj_EntityInfo: object
+    p_EntityInfo: EntityInfo
 }
 
-function Entity({index, obj_EntityInfo}: EntityProps) {
+function Entity({index, p_EntityInfo}: EntityProps) {
 
     const [entityInfo, setEntityInfo] = useState<EntityInfo | null>(null);
 
     /* Run on load */
     useEffect(() => {
-      try {
-
-        if(isEntityInfo(obj_EntityInfo)){
-            setEntityInfo(obj_EntityInfo); // Update state with parsed object
-        }
-      } catch (error) {
-        console.error("Failed to parse EntityInfo:", error);
-      }
-    }, [obj_EntityInfo]); // Re-run if str_EntityInfo changes
+      setEntityInfo(p_EntityInfo);
+    }, []); // Re-run if str_EntityInfo changes
 
     if (!entityInfo) {
-      return <div>Loading...</div>;
+      return <div></div>;
     }
 
   return (

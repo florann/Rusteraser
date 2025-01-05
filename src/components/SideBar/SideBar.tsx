@@ -6,7 +6,7 @@ import DetailSideBar from "../DetailSideBar/DetailSideBar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHardDrive } from '@fortawesome/free-regular-svg-icons'
 
-
+import eventDiskSelected from "../../event/eventDiskSelected";
 
 function Sidebar() {
 
@@ -26,8 +26,12 @@ function Sidebar() {
     }
   
     const handleClick = (index: number) => {
-        setActiveIndex(activeIndex == index ? null : index); // Set the clicked element as active
-      };
+      if (activeIndex === index) {
+        return; // Do nothing if the clicked index is already active
+      }
+      setActiveIndex(index); // Set the clicked element as active
+      eventDiskSelected.emit("clearDiv"); // Emit the custom event
+    };
 
       // Our color helper:
   const getUsageColor = (usage: number) => {
