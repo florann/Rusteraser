@@ -38,17 +38,19 @@ function MainContent() {
         });
       };
 
+      eventDiskSelected.on("clearDiv",() => {
+        console.log("Cleared dataChunks:", dataChunks); // Should log an empty array
+        setDataChunks([]);
+      });
 
       handleEvent();
-    }, [loading]); // The empty dependency array ensures this runs only once (on mount)
+    }, []); // The empty dependency array ensures this runs only once (on mount)
 
-    
-    eventDiskSelected.on("clearDiv",() => {
-      console.log("Cleared dataChunks:", dataChunks); // Should log an empty array
-      setDataChunks([]);
-      console.log("Cleared dataChunks:", dataChunks); // Should log an empty array
-    });
-    
+    // Log updated state whenever dataChunks changes
+  useEffect(() => {
+    console.log("Updated dataChunks:", dataChunks); // Logs after state update
+  }, [dataChunks]);
+
   return (
     <div className="mainContent">
       {loading ? (<div>Loading...</div>) : (dataChunks.map((chunk, index) => (

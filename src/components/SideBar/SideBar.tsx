@@ -29,8 +29,9 @@ function Sidebar() {
       if (activeIndex === index) {
         return; // Do nothing if the clicked index is already active
       }
-      setActiveIndex(index); // Set the clicked element as active
       eventDiskSelected.emit("clearDiv"); // Emit the custom event
+      setActiveIndex(index); // Set the clicked element as active
+      scan_all("C:\\")
     };
 
       // Our color helper:
@@ -61,7 +62,7 @@ function Sidebar() {
       </div>
       <div className="containerAllSideBarItems">
       {scannedDisks.map((disk, index) => (
-          <div key={index}  onClick={() => {handleClick(index), scan_all("C:\\")}}  className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
+          <div key={index}  onClick={() => {handleClick(index)}}  className={`containerSideBarItem ${activeIndex === index ? " selected" : ""}`} style={{flexDirection: "column", backgroundColor: getUsageColor(disk.usage_percentage)}}>
             <div 
             style={{}}>
                 <strong>{disk.name}</strong>&nbsp;- {disk.usage_percentage} % 
