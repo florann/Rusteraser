@@ -31,6 +31,7 @@ function Sidebar() {
       }
       eventDiskSelected.emit("clearDiv"); // Emit the custom event
       setActiveIndex(index); // Set the clicked element as active
+      /* TODO : Implement the scan for the root of the disk  */
       scan_all("C:\\")
     };
 

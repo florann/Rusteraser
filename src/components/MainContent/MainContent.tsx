@@ -1,4 +1,4 @@
-import React, { useState, useEffect, StrictMode } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
 
@@ -15,13 +15,14 @@ function MainContent() {
 
     const [loading, setLoading] = useState(true);
 
-    const [content, setContent] = useState();
-
+    const unlistenScanDataChunkRef = useRef<(() => void) | null>(null);
+    const unlistenScanCompleteRef = useRef<(() => void) | null>(null);
     /* Run on load */
     useEffect(() => {
       const handleEvent = async() => {
         /* Event */
-        await listen('scan-data-chunk', async (event) => {
+        const unlistenScanDataChunk = await listen('scan-data-chunk', async (event) => {
+          console.log("Emit");
           setLoading(true);
           let obj_EntityInfo = event.payload;
           try {
@@ -33,9 +34,13 @@ function MainContent() {
           }
         });
 
-        await listen('scan-complete',async () => {
+        const unlistenScanComplete = await listen('scan-complete',async () => {
           setLoading(false);
         });
+
+        // Store unlisten functions in refs
+        unlistenScanDataChunkRef.current = unlistenScanDataChunk;
+        unlistenScanCompleteRef.current = unlistenScanComplete;
       };
 
       eventDiskSelected.on("clearDiv",() => {
@@ -44,6 +49,14 @@ function MainContent() {
       });
 
       handleEvent();
+
+      // Cleanup listeners on unmount
+      return () => {
+        console.log("Cleaning up listeners...");
+        if (unlistenScanDataChunkRef.current) unlistenScanDataChunkRef.current();
+        if (unlistenScanCompleteRef.current) unlistenScanCompleteRef.current();
+        eventDiskSelected.off("clearDiv"); // Remove custom event listener
+      };
     }, []); // The empty dependency array ensures this runs only once (on mount)
 
     // Log updated state whenever dataChunks changes

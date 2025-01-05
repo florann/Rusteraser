@@ -96,8 +96,6 @@ fn scan_all(path: &str, app_handle: tauri::AppHandle) {
 
                     app_handle.emit_all("scan-data-chunk", entity_info).expect("Failed to emit data chunk");
                 } 
-
-          
             },
             Err(_err) => {
                 //nothing
