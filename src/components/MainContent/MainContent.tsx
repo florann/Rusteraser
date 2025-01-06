@@ -17,12 +17,12 @@ function MainContent() {
 
     const unlistenScanDataChunkRef = useRef<(() => void) | null>(null);
     const unlistenScanCompleteRef = useRef<(() => void) | null>(null);
+    
     /* Run on load */
     useEffect(() => {
       const handleEvent = async() => {
         /* Event */
         const unlistenScanDataChunk = await listen('scan-data-chunk', async (event) => {
-          console.log("Emit");
           setLoading(true);
           let obj_EntityInfo = event.payload;
           try {
@@ -33,36 +33,33 @@ function MainContent() {
             console.error("Failed to parse EntityInfo:", error);
           }
         });
+        unlistenScanDataChunkRef.current = unlistenScanDataChunk;
 
         const unlistenScanComplete = await listen('scan-complete',async () => {
           setLoading(false);
         });
-
-        // Store unlisten functions in refs
-        unlistenScanDataChunkRef.current = unlistenScanDataChunk;
         unlistenScanCompleteRef.current = unlistenScanComplete;
       };
+      handleEvent();
 
       eventDiskSelected.on("clearDiv",() => {
-        console.log("Cleared dataChunks:", dataChunks); // Should log an empty array
+        //console.log("Cleared dataChunks:", dataChunks); // Should log an empty array
         setDataChunks([]);
       });
 
-      handleEvent();
+
 
       // Cleanup listeners on unmount
       return () => {
-        console.log("Cleaning up listeners...");
-        if (unlistenScanDataChunkRef.current) unlistenScanDataChunkRef.current();
-        if (unlistenScanCompleteRef.current) unlistenScanCompleteRef.current();
+        if (unlistenScanDataChunkRef.current){
+          unlistenScanDataChunkRef.current();
+        }
+        if (unlistenScanCompleteRef.current){
+          unlistenScanCompleteRef.current();
+        }
         eventDiskSelected.off("clearDiv"); // Remove custom event listener
       };
     }, []); // The empty dependency array ensures this runs only once (on mount)
-
-    // Log updated state whenever dataChunks changes
-  useEffect(() => {
-    console.log("Updated dataChunks:", dataChunks); // Logs after state update
-  }, [dataChunks]);
 
   return (
     <div className="mainContent">
