@@ -46,6 +46,15 @@ fn scan_disk() -> Vec<DiskInfo> {
     vector
 }
 
+/* TODO : Implement new logic of disk scouting
+    -> Begin the search at the root
+        for each entity found 
+            if 
+                it's a file store it 
+            else if
+                it's a folder scout it  
+*/
+
 #[tauri::command]
 fn scan_all(path: &str, app_handle: tauri::AppHandle) {
     print!("{}",path);

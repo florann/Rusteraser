@@ -1,4 +1,11 @@
 .entity
 {
     border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.entity > div {
+    flex: 1;
 }

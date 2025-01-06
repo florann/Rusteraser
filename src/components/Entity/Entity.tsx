@@ -25,13 +25,14 @@ function Entity({index, p_EntityInfo}: EntityProps) {
     <div key={index} className="dataChunk">
       {entityInfo.type === "File" ? (
         <div className="entity">
-          <div>
+          <div>[iconFile]</div>
+          {/* <div>
             <strong>Type:</strong> {entityInfo.type}
-          </div>
+          </div> */}
           <div>
             <strong>Name:</strong> {entityInfo.name}
           </div>
-          <div>
+          {/* <div>
             <strong>Extension:</strong> {entityInfo.extension} 
           </div>
           <div>
@@ -39,31 +40,32 @@ function Entity({index, p_EntityInfo}: EntityProps) {
           </div>
           <div>
             <strong>Parent:</strong> {entityInfo.parent} 
-          </div>
+          </div> */}
           <div>
             <strong>Size:</strong> {entityInfo.size} bytes
           </div>
         </div>
       ) : (
         <div className="entity">
-          <div>
+          <div>[iconFolder]</div>
+          {/* <div>
             <strong>Type:</strong> {entityInfo.type} 
-          </div>
+          </div> */}
           <div>
             <strong>Name:</strong> {entityInfo.name} 
           </div>
-          <div>
+          {/* <div>
             <strong>Path:</strong> {entityInfo.path} 
           </div>
           <div>
             <strong>Parent:</strong> {entityInfo.parent} 
-          </div>
+          </div> */}
           <div>
             <strong>Size:</strong> {entityInfo.size} bytes 
           </div>
-          <div>
+          {/* <div>
             <strong>Number of Elements:</strong> {entityInfo.nb_elements}
-          </div>
+          </div> */}
         </div>
       )}
   </div>
