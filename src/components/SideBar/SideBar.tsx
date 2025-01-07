@@ -20,9 +20,9 @@ function Sidebar() {
     }
 
     const [scanItems, setScanItems] = useState("");
-    async function scan_all(path: string)
+    async function scan_directory_async(path: string)
     {
-      setScanItems(await invoke("scan_all", {path}));
+      setScanItems(await invoke("scan_directory_async", {path}));
     }
   
     const handleClick = (index: number) => {
@@ -32,7 +32,7 @@ function Sidebar() {
       eventDiskSelected.emit("clearDiv"); // Emit the custom event
       setActiveIndex(index); // Set the clicked element as active
       /* TODO : Implement the scan for the root of the disk  */
-      scan_all("C:\\")
+      scan_directory_async("C:\\")
     };
 
       // Our color helper:

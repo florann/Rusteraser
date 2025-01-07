@@ -4,14 +4,16 @@ export type EntityInfo =
       name: string;
       extension: string;
       path: string;
-      parent: string;
+      parent_path: string;
+      node_type: string;
       size: number;
     }
   | {
       type: "Folder";
       name: string;
       path: string;
-      parent: string;
+      parent_path: string;
+      node_type: string;
       size: number;
       nb_elements: number;
     };
@@ -25,7 +27,8 @@ export function isEntityInfo(obj: any): obj is EntityInfo {
     return (
       typeof obj.name === "string" &&
       typeof obj.extension === "string" &&
-      typeof obj.path === "string" &&
+      typeof obj.parent_path === "string" &&
+      typeof obj.node_type === "string" &&
       typeof obj.parent === "string" &&
       typeof obj.size === "number"
     );
@@ -35,7 +38,8 @@ export function isEntityInfo(obj: any): obj is EntityInfo {
     return (
       typeof obj.name === "string" &&
       typeof obj.path === "string" &&
-      typeof obj.parent === "string" &&
+      typeof obj.parent_path === "string" &&
+      typeof obj.node_type === "string" &&
       typeof obj.size === "number" &&
       typeof obj.nb_elements === "number"
     );
