@@ -7,17 +7,12 @@ mod folder;
 mod traits;
 mod mod_enum;
 
-use std::{fs::metadata, thread};
+use std::{fs::metadata, thread, path};
 use tauri::Manager;
-use walkdir::WalkDir;
 use sysinfo::{DiskExt, System, SystemExt};
-use tokio::task;
-use std::pin::Pin;
 
 use mod_enum::entity_info::{self, EntityInfo};
 use disk::disk_info::DiskInfo;
-use folder::folder_info::FolderInfo;
-use file::file_info::FileInfo;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -49,14 +44,65 @@ fn scan_disk() -> Vec<DiskInfo> {
 }
 
 /* TODO : Implement new logic of disk scouting
-    -> Begin the search at the root
-        for each entity found 
-            if 
-                it's a file store it 
-            else if
-                it's a folder scout it
-
+    -> Implement Stack-based DFS ( Deep file scanning )
+        Instead of calling recursive function we use a stack to crawl on it.
 */
+/* Function example */
+#[tauri::command]
+fn start_scan(path: String, app_handle: tauri::AppHandle)
+{
+    std::thread::spawn(move || {
+        scan_directory_iterative_dfs(&path, app_handle);
+    });
+}
+
+fn scan_directory_iterative_dfs(path: &str, app_handle: tauri::AppHandle) {
+    let mut stack = vec![path::PathBuf::from(path)];
+    let mut cpt = 0;
+    while let Some(current_path) = stack.pop() {
+        cpt = cpt + 1;
+        if cpt > 150 {
+            break;
+        }
+        if let Ok(entries) = std::fs::read_dir(&current_path) {
+            for entry_result in entries {
+                if let Ok(entry) = entry_result {
+                    let entry_path = entry.path();
+                    let entity_metadata = entry.metadata().unwrap();
+                    let scanned_entity:EntityInfo;
+                    if entity_metadata.is_dir() {
+                        scanned_entity = entity_info::EntityInfo::Folder {
+                            name: entry.file_name().into_string().unwrap(),
+                            path: entry.path().to_string_lossy().to_string(),
+                            node_type: "folder".to_string(),
+                            parent_path: entry.path().to_string_lossy().to_string(),
+                            size: metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0),
+                            nb_elements: 0
+                        };
+
+                        println!("Dir: {}", entry_path.display());
+                        stack.push(entry_path);
+                    } else {
+                        scanned_entity = entity_info::EntityInfo::File {
+                            name: entry.file_name().into_string().unwrap(),
+                            path: entry.path().to_string_lossy().to_string(),
+                            node_type: "file".to_string(),
+                            parent_path: entry.path().to_string_lossy().to_string(),
+                            extension: entry.path().extension().map(|extension| extension.to_string_lossy().to_string()).unwrap_or_default(),
+                            size:  metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
+                        };
+                        
+                        println!("File: {}", entry_path.display());
+                    }
+
+                    app_handle.emit_all("scan-data-chunk", scanned_entity).expect("Failed to emit data chunk");
+                }
+            }
+        }
+    }
+    app_handle.emit_all("scan-complete", true).unwrap(); // Signal the folder scan is complete    
+}
+
 #[tauri::command]
 async fn scan_directory_async(path: String, app_handle: tauri::AppHandle) {
     thread::spawn(move || {
@@ -107,7 +153,7 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async])
+        .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
