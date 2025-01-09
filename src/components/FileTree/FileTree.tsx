@@ -20,7 +20,7 @@ function FileTree() {
         const handleEvent = async() => {
         /* Event */
         const unlistenScanDataChunk = await listen('scan-data-chunk', async (event) => {
-            setLoading(true);
+            setLoading(false);
             let obj_EntityInfo = event.payload;
             try {
                 if(isEntityInfo(obj_EntityInfo)){

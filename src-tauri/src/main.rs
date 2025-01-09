@@ -2,16 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod disk;
 mod helper;
-mod file;
-mod folder;
 mod traits;
-mod mod_enum;
+mod entity;
 
 use std::{fs::metadata, thread, path};
 use tauri::Manager;
 use sysinfo::{DiskExt, System, SystemExt};
 
-use mod_enum::entity_info::{self, EntityInfo};
+use entity::entity_info::{self, EntityInfo};
 use disk::disk_info::DiskInfo;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -43,11 +41,7 @@ fn scan_disk() -> Vec<DiskInfo> {
     vector
 }
 
-/* TODO : Implement new logic of disk scouting
-    -> Implement Stack-based DFS ( Deep file scanning )
-        Instead of calling recursive function we use a stack to crawl on it.
-*/
-/* Function example */
+/* TODO : Implement multithread scannig to improve speed */
 #[tauri::command]
 fn start_scan(path: String, app_handle: tauri::AppHandle)
 {
@@ -82,20 +76,21 @@ fn scan_directory_iterative_dfs(path: &str, app_handle: tauri::AppHandle) {
 
                         println!("Dir: {}", entry_path.display());
                         stack.push(entry_path);
+                        app_handle.emit_all("scan-data-chunk", scanned_entity).expect("Failed to emit data chunk");
                     } else {
-                        scanned_entity = entity_info::EntityInfo::File {
-                            name: entry.file_name().into_string().unwrap(),
-                            path: entry.path().to_string_lossy().to_string(),
-                            node_type: "file".to_string(),
-                            parent_path: entry.path().to_string_lossy().to_string(),
-                            extension: entry.path().extension().map(|extension| extension.to_string_lossy().to_string()).unwrap_or_default(),
-                            size:  metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
-                        };
+                        // scanned_entity = entity_info::EntityInfo::File {
+                        //     name: entry.file_name().into_string().unwrap(),
+                        //     path: entry.path().to_string_lossy().to_string(),
+                        //     node_type: "file".to_string(),
+                        //     parent_path: entry.path().to_string_lossy().to_string(),
+                        //     extension: entry.path().extension().map(|extension| extension.to_string_lossy().to_string()).unwrap_or_default(),
+                        //     size:  metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
+                        // };
                         
-                        println!("File: {}", entry_path.display());
+                        //println!("File: {}", entry_path.display());
                     }
 
-                    app_handle.emit_all("scan-data-chunk", scanned_entity).expect("Failed to emit data chunk");
+                  
                 }
             }
         }
@@ -110,7 +105,7 @@ async fn scan_directory_async(path: String, app_handle: tauri::AppHandle) {
     });
 }
 
-fn scan_directory(path: String, app_handle: tauri::AppHandle) {
+fn _scan_directory(path: String, app_handle: tauri::AppHandle) {
         use std::fs;
         if let Ok(entries) = fs::read_dir(&path) {
             for entry in entries {
@@ -150,6 +145,47 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle) {
         app_handle.emit_all("scan-complete", path).unwrap(); // Signal the folder scan is complete    
 }
 
+/* 
+    TODO : 
+        -> Create a function to scan a folder - NOT MORE, then send back the content of the folder 
+        -> Create a function to scan the whole disk to 
+*/
+fn scan_directory(path: String, app_handle: tauri::AppHandle)
+{
+    use std::fs;
+    if let Ok(entries) = fs::read_dir(&path) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let entity_metadata = entry.metadata().unwrap();
+                let is_dir = entity_metadata.is_dir();
+                let scanned_entity: entity_info::EntityInfo;
+                if is_dir {
+                    scanned_entity = entity_info::EntityInfo::Folder {
+                        name: entry.file_name().into_string().unwrap(),
+                        path: entry.path().to_string_lossy().to_string(),
+                        node_type: "folder".to_string(),
+                        parent_path: entry.path().to_string_lossy().to_string(),
+                        size: metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0),
+                        nb_elements: 0
+                    };
+                }
+                else {
+                    scanned_entity = entity_info::EntityInfo::File {
+                        name: entry.file_name().into_string().unwrap(),
+                        path: entry.path().to_string_lossy().to_string(),
+                        node_type: "file".to_string(),
+                        parent_path: entry.path().to_string_lossy().to_string(),
+                        extension: entry.path().extension().map(|extension| extension.to_string_lossy().to_string()).unwrap_or_default(),
+                        size: metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
+                    };
+                }
+
+                app_handle.emit_all("entity-scanned", scanned_entity).expect("Failed to emit data");
+            }
+        }
+    }
+    app_handle.emit_all("dir-scanned", path).unwrap(); // Signal the folder scan is complete    
+}
 
 fn main() {
     tauri::Builder::default()

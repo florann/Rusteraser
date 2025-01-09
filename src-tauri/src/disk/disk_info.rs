@@ -1,5 +1,5 @@
 use serde::Serialize;
-use crate::helper::number;
+use crate::helper::helper;
 
 #[derive(Debug, Serialize)]
 pub struct DiskInfo {
@@ -17,8 +17,8 @@ impl DiskInfo {
             name,
             total_space,
             available_space,
-            available_percentage: number::round_to_decimals((available_space as f64 / total_space as f64) * 100.0, 2),
-            usage_percentage:number::round_to_decimals((1.0 - (available_space as f64 / total_space as f64)) * 100.0, 2)
+            available_percentage: helper::round_to_decimals((available_space as f64 / total_space as f64) * 100.0, 2),
+            usage_percentage:helper::round_to_decimals((1.0 - (available_space as f64 / total_space as f64)) * 100.0, 2)
         }
     }
 }
