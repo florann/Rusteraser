@@ -5,11 +5,15 @@ mod helper;
 mod traits;
 mod entity;
 
-use std::{fs::metadata, thread, path};
-use tauri::Manager;
+use std::{fs, thread, path};
+use tauri::{api::dir::read_dir, Manager};
 use sysinfo::{DiskExt, System, SystemExt};
 
+use std::fs::{metadata};
+
 use entity::entity_info::{self, EntityInfo};
+use traits::entity::{Entity, FileEntity, FolderEntity};
+
 use disk::disk_info::DiskInfo;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -43,8 +47,7 @@ fn scan_disk() -> Vec<DiskInfo> {
 
 /* TODO : Implement multithread scannig to improve speed */
 #[tauri::command]
-fn start_scan(path: String, app_handle: tauri::AppHandle)
-{
+fn start_scan(path: String, app_handle: tauri::AppHandle){
     std::thread::spawn(move || {
         scan_directory_iterative_dfs(&path, app_handle);
     });
@@ -150,8 +153,7 @@ fn _scan_directory(path: String, app_handle: tauri::AppHandle) {
         -> Create a function to scan a folder - NOT MORE, then send back the content of the folder 
         -> Create a function to scan the whole disk to 
 */
-fn scan_directory(path: String, app_handle: tauri::AppHandle)
-{
+fn scan_directory(path: String, app_handle: tauri::AppHandle){
     use std::fs;
     if let Ok(entries) = fs::read_dir(&path) {
         for entry in entries {
@@ -165,7 +167,7 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle)
                         path: entry.path().to_string_lossy().to_string(),
                         node_type: "folder".to_string(),
                         parent_path: entry.path().to_string_lossy().to_string(),
-                        size: metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0),
+                        size: fs::metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0),
                         nb_elements: 0
                     };
                 }
@@ -176,7 +178,7 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle)
                         node_type: "file".to_string(),
                         parent_path: entry.path().to_string_lossy().to_string(),
                         extension: entry.path().extension().map(|extension| extension.to_string_lossy().to_string()).unwrap_or_default(),
-                        size: metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
+                        size: fs::metadata(entry.path()).map(|f_metadata| f_metadata.len()).unwrap_or(0)
                     };
                 }
 
@@ -188,8 +190,11 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle)
 }
 
 fn main() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+    let folder = FolderEntity::new("C://".to_string());
+
+
+    // tauri::Builder::default()
+    //     .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan])
+    //     .run(tauri::generate_context!())
+    //     .expect("error while running tauri application");
 }
