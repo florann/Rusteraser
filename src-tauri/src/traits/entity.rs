@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::fs::{metadata, read_dir, DirEntry, Metadata};
 use std::path::{Path};
+use std::ffi::OsStr;
 
 #[derive(Serialize)]
 pub struct FileEntity {
@@ -8,7 +9,7 @@ pub struct FileEntity {
     #[serde(skip)]
     parent_entries: Vec<DirEntry>,
     #[serde(skip)]
-    children_entries: Vec<DirEntry>,
+    children_entries: Vec<Vec<DirEntry>>,
     size: u64,
     path: String,
     extension: String,
@@ -24,7 +25,7 @@ pub struct FolderEntity {
     #[serde(skip)]
     current_entries: Vec<DirEntry>,
     #[serde(skip)]
-    children_entries: Vec<DirEntry>,
+    children_entries: Vec<Vec<DirEntry>>,
     size: u64,
     path: String,
     #[serde(skip)]
@@ -37,7 +38,7 @@ pub trait Entity : Serialize {
     fn get_name(&self) -> &String;
     fn get_parents(&self) -> &Vec<DirEntry>;
     fn get_currents(&self) -> &Vec<DirEntry>;
-    fn get_children(&self) -> &Vec<DirEntry>;
+    fn get_children(&self) -> &Vec<Vec<DirEntry>>;
     fn get_size(&self) -> &u64;
     fn get_path(&self) -> &String;
     fn get_meta_data(&self) -> &Metadata;
@@ -93,14 +94,42 @@ impl Entity for FolderEntity
         let std_path = Path::new(&entity_path);
         let meta_data = metadata(std_path).unwrap();
         let len =  meta_data.len();
+        
+        let current_entries: Vec<DirEntry> = read_dir(std_path).unwrap().flatten().collect();
+        let mut children_entries: Vec<Vec<DirEntry>> = Vec::new();
+        for entry in &current_entries {
+            println!("{}", entry.file_name().to_string_lossy().to_string());
+            let entry_meta_data = metadata(entry.path());
+            if entry_meta_data.unwrap().is_dir() {
+                if let Ok(entries) = read_dir(entry.path()) {
+                    let tmp_folder_entry = entries.flatten().collect();
+                    children_entries.push(tmp_folder_entry);
+                }
+                else {
+                    println!("----------------------------------");
+                    println!(" Error reading folder : {}", entry.path().to_string_lossy().to_string());
+                }
+           
+            }
+        } 
+        
+        let parent_entries;
+        if let Some(parent_path) = std_path.parent()
+        {
+            parent_entries = read_dir(parent_path).unwrap().flatten().collect();
+        }
+        else {
+            parent_entries = Vec::new();
+        }
+
         FolderEntity{
             meta_data,
-            name: std_path.file_name().unwrap().to_string_lossy().to_string(),
+            name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
             path: entity_path.clone(),
             entity_type: "folder".to_string(),
-            parent_entries: read_dir(std_path.parent().unwrap()).unwrap().flatten().collect(),
-            current_entries: read_dir(std_path).unwrap().flatten().collect(),
-            children_entries: read_dir(std_path).unwrap().flatten().collect(), /* TODO : Scan the children of the current dir */
+            parent_entries: parent_entries,
+            current_entries: current_entries,
+            children_entries: children_entries, /* TODO : Scan the children of the current dir */
             size:len
         }
     }
@@ -117,7 +146,7 @@ impl Entity for FolderEntity
         &self.current_entries
     }
 
-    fn get_children(&self) -> &Vec<DirEntry> {
+    fn get_children(&self) -> &Vec<Vec<DirEntry>> {
         &self.children_entries
     }
 
