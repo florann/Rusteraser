@@ -190,9 +190,10 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle){
 }
 
 fn main() {
-    let folder = FolderEntity::new("C://".to_string());
+    let folder: FolderEntity = FolderEntity::new("C://".to_string());
+    let file: FileEntity = FileEntity::new("C://Users//flora//Desktop//Azer.txt".to_string());
 
-
+    let tmp = "";
     // tauri::Builder::default()
     //     .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan])
     //     .run(tauri::generate_context!())
