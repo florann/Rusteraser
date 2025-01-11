@@ -19,8 +19,10 @@ function FileTree() {
   useEffect(() => {
         const handleEvent = async() => {
         /* Event */
-        const unlistenScanDataChunk = await listen('scan-data-chunk', async (event) => {
+        const unlistenScanDataChunk = await listen('dummy-scan', async (event) => {
             setLoading(false);
+            console.log("payload");
+            console.log(event.payload);
             let obj_EntityInfo = event.payload;
             try {
                 if(isEntityInfo(obj_EntityInfo)){

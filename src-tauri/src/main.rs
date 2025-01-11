@@ -189,13 +189,19 @@ fn scan_directory(path: String, app_handle: tauri::AppHandle){
     app_handle.emit_all("dir-scanned", path).unwrap(); // Signal the folder scan is complete    
 }
 
-fn main() {
+#[tauri::command]
+fn dummy_emit(app_handler: tauri::AppHandle){
     let folder: FolderEntity = FolderEntity::new("C://".to_string());
-    let file: FileEntity = FileEntity::new("C://Users//flora//Desktop//Azer.txt".to_string());
+    let file: FileEntity = FileEntity::new("C://Users//flora//Documents//Azer.txt".to_string());
 
-    let tmp = "";
-    // tauri::Builder::default()
-    //     .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan])
-    //     .run(tauri::generate_context!())
-    //     .expect("error while running tauri application");
+    app_handler.emit_all("dummy-scan", &folder).unwrap();
+    app_handler.emit_all("dummy-scan", &file).unwrap();
+}
+
+fn main() {
+
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![greet, scan_disk, scan_directory_async, start_scan, dummy_emit])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

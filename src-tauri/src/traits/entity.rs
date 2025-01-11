@@ -1,5 +1,6 @@
 use serde::Serialize;
-use std::default;
+use serde::ser::SerializeSeq;
+use serde::Serializer;
 use std::fs::{metadata, read_dir, DirEntry, Metadata};
 use std::path::{Path};
 use std::ffi::OsStr;
@@ -7,33 +8,55 @@ use std::ffi::OsStr;
 #[derive(Serialize)]
 pub struct FileEntity {
     name: String,
-    #[serde(skip)]
+    #[serde(serialize_with = "serialize_dir_entries")]
     parent_entries: Vec<DirEntry>,
-    #[serde(skip)]
-    children_entries: Vec<Vec<DirEntry>>,
-    #[serde(skip)]
+    #[serde(serialize_with = "serialize_dir_entries")]
     current_entries: Vec<DirEntry>,
+    #[serde(serialize_with = "serialize_vec_of_vec_dir_entries")]
+    children_entries: Vec<Vec<DirEntry>>,
     size: u64,
     path: String,
     extension: String,
-    #[serde(skip)]
-    meta_data: Metadata,
     entity_type: String
 }
 #[derive(Serialize)]
 pub struct FolderEntity {
     name: String,
-    #[serde(skip)]
+    #[serde(serialize_with = "serialize_dir_entries")]
     parent_entries: Vec<DirEntry>,
-    #[serde(skip)]
+    #[serde(serialize_with = "serialize_dir_entries")]
     current_entries: Vec<DirEntry>,
-    #[serde(skip)]
+    #[serde(serialize_with = "serialize_vec_of_vec_dir_entries")]
     children_entries: Vec<Vec<DirEntry>>,
     size: u64,
     path: String,
-    #[serde(skip)]
-    meta_data: Metadata,
     entity_type: String
+}
+
+fn serialize_dir_entries<S>(entries: &Vec<DirEntry>, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    let dir_entries_path: Vec<String> = entries.iter()
+    .map(|e| e.path().to_string_lossy().into_owned()).collect();
+
+    dir_entries_path.serialize(serializer)
+}
+
+fn serialize_vec_of_vec_dir_entries<S>(
+    entries: &Vec<Vec<DirEntry>>, 
+    serializer: S
+) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    // We'll create a sequence of sequences of strings
+    let mut outer_seq = serializer.serialize_seq(Some(entries.len()))?;
+    for inner_vec in entries {
+        let as_paths: Vec<String> = inner_vec
+            .iter()
+            .map(|e| e.path().to_string_lossy().into_owned())
+            .collect();
+        outer_seq.serialize_element(&as_paths)?;
+    }
+    outer_seq.end()
 }
 
 pub trait Entity : Serialize {
@@ -44,7 +67,6 @@ pub trait Entity : Serialize {
     fn get_children(&self) -> &Vec<Vec<DirEntry>>;
     fn get_size(&self) -> &u64;
     fn get_path(&self) -> &String;
-    fn get_meta_data(&self) -> &Metadata;
     fn get_entity_type(&self) -> &String;
 }
 
@@ -59,10 +81,17 @@ impl Entity for FileEntity
 
             let current_entries: Vec<DirEntry> = Vec::new();
             let children_entries: Vec<Vec<DirEntry>> = Vec::new();
-            let parent_entries: Vec<DirEntry> = Vec::new();
 
+            let parent_entries;
+            if let Some(parent_path) = std_path.parent()
+            {
+                parent_entries = read_dir(parent_path).unwrap().flatten().collect();
+            }
+            else {
+                parent_entries = Vec::new();
+            }
+            
             FileEntity{
-                meta_data,
                 name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
                 path: entity_path.clone(),
                 entity_type: "file".to_string(),
@@ -82,7 +111,6 @@ impl Entity for FileEntity
                 size: 0,
                 path: String::new(),
                 extension: String::new(),
-                meta_data: unsafe { std::mem::zeroed() }, // Placeholder; use a safer approach for Metadata
                 entity_type: String::new(),
             }
         }
@@ -110,10 +138,6 @@ impl Entity for FileEntity
 
     fn get_path(&self) -> &String{
         &self.path
-    }
-
-    fn get_meta_data(&self) -> &Metadata{
-        &self.meta_data
     }
 
     fn get_entity_type(&self) -> &String {
@@ -157,7 +181,6 @@ impl Entity for FolderEntity
             }
 
             FolderEntity{
-                meta_data,
                 name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
                 path: entity_path.clone(),
                 entity_type: "folder".to_string(),
@@ -175,7 +198,6 @@ impl Entity for FolderEntity
                 children_entries: Vec::new(),
                 size: 0,
                 path: String::new(),
-                meta_data: unsafe { std::mem::zeroed() }, // Default is None to avoid unsafe operations
                 entity_type: String::new(),
             }
         }
@@ -203,10 +225,6 @@ impl Entity for FolderEntity
 
     fn get_path(&self) -> &String{
         &self.path
-    }
-
-    fn get_meta_data(&self) -> &Metadata{
-        &self.meta_data
     }
 
     fn get_entity_type(&self) -> &String {
