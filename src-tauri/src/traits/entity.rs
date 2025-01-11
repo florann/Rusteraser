@@ -90,7 +90,7 @@ impl Entity for FileEntity
             else {
                 parent_entries = Vec::new();
             }
-            
+
             FileEntity{
                 name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
                 path: entity_path.clone(),
@@ -156,7 +156,7 @@ impl Entity for FolderEntity
             let current_entries: Vec<DirEntry> = read_dir(std_path).unwrap().flatten().collect();
             let mut children_entries: Vec<Vec<DirEntry>> = Vec::new();
             for entry in &current_entries {
-                println!("{}", entry.file_name().to_string_lossy().to_string());
+                //println!("{}", entry.file_name().to_string_lossy().to_string());
                 let entry_meta_data = metadata(entry.path());
                 if entry_meta_data.unwrap().is_dir() {
                     if let Ok(entries) = read_dir(entry.path()) {
@@ -164,8 +164,8 @@ impl Entity for FolderEntity
                         children_entries.push(tmp_folder_entry);
                     }
                     else {
-                        println!("----------------------------------");
-                        println!(" Error reading folder : {}", entry.path().to_string_lossy().to_string());
+                       // println!("----------------------------------");
+                       // println!(" Error reading folder : {}", entry.path().to_string_lossy().to_string());
                     }
                 
                 }

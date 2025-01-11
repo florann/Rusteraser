@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef  } from "react";
 
 import "./MainContent.css";
-import FileTree from "../FileTree/FileTree";
+import Browser from "../Browser/Browser";
 
 function MainContent() {
     /* Run on load */
@@ -10,7 +10,7 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <FileTree></FileTree>
+      <Browser></Browser>
     </div>
   );
 }

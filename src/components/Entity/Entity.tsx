@@ -26,21 +26,9 @@ function Entity({index, p_EntityInfo}: EntityProps) {
       {entityInfo.type === "File" ? (
         <div className="entity">
           <div>[iconFile]</div>
-          {/* <div>
-            <strong>Type:</strong> {entityInfo.type}
-          </div> */}
           <div>
             <strong>Name:</strong> {entityInfo.name}
           </div>
-          {/* <div>
-            <strong>Extension:</strong> {entityInfo.extension} 
-          </div>
-          <div>
-            <strong>Path:</strong> {entityInfo.path} 
-          </div>
-          <div>
-            <strong>Parent:</strong> {entityInfo.parent} 
-          </div> */}
           <div>
             <strong>Size:</strong> {entityInfo.size} bytes
           </div>
@@ -48,24 +36,12 @@ function Entity({index, p_EntityInfo}: EntityProps) {
       ) : (
         <div className="entity">
           <div>[iconFolder]</div>
-          {/* <div>
-            <strong>Type:</strong> {entityInfo.type} 
-          </div> */}
           <div>
             <strong>Name:</strong> {entityInfo.name} 
           </div>
-          {/* <div>
-            <strong>Path:</strong> {entityInfo.path} 
-          </div>
-          <div>
-            <strong>Parent:</strong> {entityInfo.parent} 
-          </div> */}
           <div>
             <strong>Size:</strong> {entityInfo.size} bytes 
           </div>
-          {/* <div>
-            <strong>Number of Elements:</strong> {entityInfo.nb_elements}
-          </div> */}
         </div>
       )}
   </div>
