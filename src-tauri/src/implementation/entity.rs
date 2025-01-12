@@ -1,3 +1,5 @@
+/* File that implementation the representation of a file and folder */
+
 use serde::Serialize;
 use serde::ser::SerializeSeq;
 use serde::Serializer;

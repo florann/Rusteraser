@@ -2,17 +2,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod disk;
 mod helper;
-mod traits;
-mod entity;
+mod implementation;
 
 use std::{fs, thread, path};
 use tauri::{api::dir::read_dir, Manager};
 use sysinfo::{DiskExt, System, SystemExt};
 
-use std::fs::{metadata};
+use std::fs::{metadata}; 
 
-use entity::entity_info::{self, EntityInfo};
-use traits::entity::{Entity, FileEntity, FolderEntity};
+use implementation::entity::{Entity, FileEntity, FolderEntity};
 
 use disk::disk_info::DiskInfo;
 
