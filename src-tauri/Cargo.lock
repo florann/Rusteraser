@@ -7,6 +7,7 @@ name = "Rusteraser"
 version = "0.0.0"
 dependencies = [
  "humansize",
+ "lazy_static",
  "once_cell",
  "rayon",
  "serde",

@@ -2,6 +2,14 @@
 use std::fs;
 use std::io;
 use std::path::Path;
+use std::sync::atomic::AtomicU64;
+use lazy_static::lazy_static;
+use std::sync::atomic::{Ordering};
+use tauri::Manager;
+
+lazy_static! {
+    static ref SCAN_PROGRESS: AtomicU64 = AtomicU64::new(0);
+}
 
 #[derive(serde::Serialize)]
 pub struct DiskData {
@@ -14,21 +22,9 @@ impl DiskData {
     pub fn new(path: String, size: u64, children: Vec<DiskData>) -> Self {
         Self { path, size, children }
     }
-
-    pub fn path(&self) -> &str {
-        &self.path
-    }
-
-    pub fn size(&self) -> u64 {
-        self.size
-    }
-
-    pub fn children(&self) -> &Vec<DiskData> {
-        &self.children
-    }
 }
 
-pub fn scan_folder_start(path: &Path) -> io::Result<DiskData> {
+pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle) -> io::Result<DiskData> {
     if !path.is_dir() {
         return Ok(DiskData {
             path: path.to_path_buf().to_string_lossy().to_string(),
@@ -55,7 +51,6 @@ pub fn scan_folder_start(path: &Path) -> io::Result<DiskData> {
     };
 
     for entry in  read_dir_data{
-
         let metadata = match fs::symlink_metadata(entry.path()) {
             Ok(metadata) => {
                metadata
@@ -71,13 +66,25 @@ pub fn scan_folder_start(path: &Path) -> io::Result<DiskData> {
         }
 
         if metadata.file_type().is_file() {
-            total_size += metadata.len();
+            let len = metadata.len();
+
+            // Update the global progress
+            SCAN_PROGRESS.fetch_add(len, Ordering::SeqCst);
+            let bytes_scanned = SCAN_PROGRESS.load(Ordering::SeqCst);
+            app_handler.emit_all("dummy-scan", bytes_scanned).unwrap();
+
+            total_size += len;
         }
         else if metadata.file_type().is_dir() {
              // Recursive call for subdirectory
-             match scan_folder_start(&entry.path()) {
+             match scan_folder_start(&entry.path(), app_handler) {
                 Ok(sub_dir_data) => {
                     total_size += sub_dir_data.size; // Add subdirectory size to total
+                    SCAN_PROGRESS.fetch_add(sub_dir_data.size, Ordering::SeqCst);
+
+                    let bytes_scanned = SCAN_PROGRESS.load(Ordering::SeqCst);
+                    app_handler.emit_all("dummy-scan", bytes_scanned).unwrap();
+
                     children.push(sub_dir_data); // Store subdirectory information
                 } 
                 Err(err) => eprintln!("Error scanning folder {:?}: {}", entry.path(), err),
