@@ -10,9 +10,10 @@ use tauri::{api::dir::read_dir, Manager};
 use sysinfo::{DiskExt, System, SystemExt};
 
 use std::fs::{metadata}; 
+use std::time::Instant;
 
 use implementation::entity::{Entity, FileEntity, FolderEntity};
-use implementation::disk_data::scan_folder_start;
+use implementation::disk_data::{scan_folder_start, DiskData};
 
 use disk::disk_info::DiskInfo;
 
@@ -72,25 +73,23 @@ fn disk_scan(disk_name: String, app_handle: tauri::AppHandle)
 
 #[tauri::command]
 fn dummy_emit(app_handler: tauri::AppHandle){
-    let folder: FolderEntity = FolderEntity::new("C://Program Files (x86)//".to_string());
-    //let file: FileEntity = FileEntity::new("C://Users//flora//Documents//Azer.txt".to_string());
+    std::thread::spawn(move || {
+        let stopwatch = Instant::now(); // Start the stopwatch
+        let path = Path::new("D://");
+        let handled_result = match(scan_folder_start(path))
+        {
+            Ok(result) => {
+                result
+            }
+            Err(err) =>  {
+                println!("error : {}", err);
+                DiskData::new("".to_string(), 0, Vec::new())
+            }
+        };
 
-    app_handler.emit_all("dummy-scan", &folder).unwrap();
-    //app_handler.emit_all("dummy-scan", &file).unwrap();
-    let path = Path::new("C://Program Files (x86)//");
-    let handled_size = match(scan_folder_start(path))
-    {
-        Ok(size) => {
-            size
-        }
-        Err(err) =>  {
-            println!("error : {}", err);
-            0
-        }
-    };
-    let size = handled_size;
-
-    app_handler.emit_all("dummy-scan", size).unwrap();
+        app_handler.emit_all("dummy-scan", &handled_result).unwrap();
+        app_handler.emit_all("dummy-scan", stopwatch.elapsed().as_secs()).unwrap();
+    });
 }
 
 fn main() {
