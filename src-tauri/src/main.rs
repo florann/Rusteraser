@@ -36,7 +36,7 @@ fn scan_disk() -> Vec<DiskInfo> {
         let disk_info = DiskInfo::new(
             disk.name().to_string_lossy().to_string(),
             disk.total_space(), 
-            disk.available_space()
+            disk.available_space(),
         );
 
         // Format the output
@@ -46,6 +46,27 @@ fn scan_disk() -> Vec<DiskInfo> {
     vector
 }
 
+#[tauri::command]
+fn scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle){
+    std::thread::spawn(move || {
+        let stopwatch = Instant::now(); // Start the stopwatch
+        let path = Path::new(&disk.name);
+        let handled_result = match scan_folder_start(path, &app_handler, Some(&disk.used_space))
+        {
+            Ok(result) => {
+                result
+            }
+            Err(err) =>  {
+                println!("error : {}", err);
+                DiskData::new("".to_string(), 0, Vec::new())
+            }
+        };
+
+        app_handler.emit_all("dummy-scan", &handled_result).unwrap();
+        app_handler.emit_all("dummy-scan", stopwatch.elapsed().as_secs()).unwrap();
+    });
+}
+
 /* TODO : Setup this command to take disk root as parameter */
 /* Frontend side setup the treemap */
 #[tauri::command]
@@ -53,7 +74,7 @@ fn dummy_emit(app_handler: tauri::AppHandle){
     std::thread::spawn(move || {
         let stopwatch = Instant::now(); // Start the stopwatch
         let path = Path::new("D://");
-        let handled_result = match(scan_folder_start(path, &app_handler))
+        let handled_result = match(scan_folder_start(path, &app_handler, Some(&1000186310656)))
         {
             Ok(result) => {
                 result
