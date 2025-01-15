@@ -120,11 +120,11 @@ pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk
 }
 
 /* rmdir */
-pub fn rmdir(disk_data: DiskData) -> bool {
+pub fn rmdir(path: String) -> bool {
     return false;
-    match fs::remove_dir_all(disk_data.path) {
+    match fs::remove_dir_all(path) {
         Ok(_) => {
-            println!("Directory {} successfully remove.", disk_data.path);
+            println!("Directory {} successfully remove.", path);
             true
         },
         Err(err) => {

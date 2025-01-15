@@ -13,7 +13,7 @@ use std::fs::{metadata};
 use std::time::Instant;
 
 use implementation::entity::{Entity, FileEntity, FolderEntity};
-use implementation::disk_data::{scan_folder_start, DiskData};
+use implementation::disk_data::{scan_folder_start, DiskData, rmdir, del};
 
 use disk::disk_info::DiskInfo;
 
@@ -47,10 +47,16 @@ fn scan_disk() -> Vec<DiskInfo> {
 }
 
 #[tauri::command]
-fn scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle){
+fn cmd_scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle) {
     std::thread::spawn(move || {
+        println!("disk name {}", disk.name);
+        let mut disk_name: String = "".to_string();
+        if disk.name == "OS" {
+            disk_name = "C:\\".to_string();
+        }
+        println!("disk total space {}", disk.used_space);
         let stopwatch = Instant::now(); // Start the stopwatch
-        let path = Path::new(&disk.name);
+        let path = Path::new(&disk_name);
         let handled_result = match scan_folder_start(path, &app_handler, Some(&disk.used_space))
         {
             Ok(result) => {
@@ -65,6 +71,18 @@ fn scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle){
         app_handler.emit_all("dummy-scan", &handled_result).unwrap();
         app_handler.emit_all("dummy-scan", stopwatch.elapsed().as_secs()).unwrap();
     });
+}
+
+#[tauri::command]
+fn cmd_rmdir(str: String, app_handler: tauri::AppHandle){
+    let result = rmdir(str);
+    app_handler.emit_all("event-rmdir", result).unwrap();
+}
+
+#[tauri::command]
+fn cmd_del(str: String, app_handler: tauri::AppHandle){
+    let result = del(str);
+    app_handler.emit_all("event-del", result).unwrap();
 }
 
 /* TODO : Setup this command to take disk root as parameter */
@@ -93,7 +111,7 @@ fn dummy_emit(app_handler: tauri::AppHandle){
 fn main() {
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, scan_disk, dummy_emit])
+        .invoke_handler(tauri::generate_handler![greet, scan_disk, dummy_emit, cmd_scan_selected_disk, cmd_rmdir, cmd_del])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

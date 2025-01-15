@@ -20,9 +20,10 @@ function Sidebar() {
     }
 
     const [scanItems, setScanItems] = useState("");
-    async function dummy_emit()
+
+    async function cmd_scan_selected_disk(disk: DiskInfo)
     {
-      setScanItems(await invoke("dummy_emit", {}));
+      setScanItems(await invoke("cmd_scan_selected_disk", {disk}));
     }
   
     const handleClick = (index: number) => {
@@ -31,12 +32,23 @@ function Sidebar() {
       }
       eventDiskSelected.emit("clearDiv"); // Emit the custom event
       setActiveIndex(index); // Set the clicked element as active
-      /* TODO : Implement the scan for the root of the disk  */
-      dummy_emit()
+
+      let item = getItem(index);
+      if(item){
+        cmd_scan_selected_disk(item);
+      }
+    };
+
+    const getItem = (index: number) => {
+      if (index >= 0 && index < scannedDisks.length) {
+        return scannedDisks[index];
+      }
+      // return undefined or handle the error
+      return undefined;
     };
 
       // Our color helper:
-  const getUsageColor = (usage: number) => {
+    const getUsageColor = (usage: number) => {
         if (usage < 50) {
         return "green";
         } else if (usage < 80) {
