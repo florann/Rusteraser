@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef  } from "react";
 
 import "./MainContent.css";
 import Browser from "../Browser/Browser";
+import TreeMap from "../TreeMap/TreeMap";
 
 function MainContent() {
     /* Run on load */
@@ -10,7 +11,7 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <Browser></Browser>
+      <TreeMap></TreeMap>
     </div>
   );
 }

@@ -27,7 +27,7 @@ pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64)
         
         if percentage_scanned > percentage_scan_progress as u64 {
             PERCENTAGE_SCAN_PROGRESS.store(percentage_scanned, Ordering::SeqCst);
-            app_handler.emit_all("dummy-scan", percentage_scanned).unwrap();
+            app_handler.emit_all("cmd_scan_selected_disk_done", percentage_scanned).unwrap();
         }
     }
 }

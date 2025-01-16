@@ -16,9 +16,7 @@ function Browser() {
   useEffect(() => {
         const handleEvent = async() => {
         /* Event */
-        const unlistenScanDataChunk = await listen('dummy-scan', async (event) => {
-            console.log("payload");
-            console.log(event.payload);
+        const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_done', async (event) => {
             let obj_EntityInfo = event.payload;
             try {
                 if(isEntityInfo(obj_EntityInfo)){

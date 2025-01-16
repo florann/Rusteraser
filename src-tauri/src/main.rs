@@ -48,8 +48,8 @@ fn scan_disk() -> Vec<DiskInfo> {
 
 #[tauri::command]
 fn cmd_scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle) {
+    print!("--------------------------");
     std::thread::spawn(move || {
-        println!("disk name {}", disk.name);
         let mut disk_name: String = "".to_string();
         if disk.name == "OS" {
             disk_name = "C:\\".to_string();
@@ -68,8 +68,8 @@ fn cmd_scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle) {
             }
         };
 
-        app_handler.emit_all("dummy-scan", &handled_result).unwrap();
-        app_handler.emit_all("dummy-scan", stopwatch.elapsed().as_secs()).unwrap();
+        app_handler.emit_all("cmd_scan_selected_disk_done", &handled_result).unwrap();
+        app_handler.emit_all("cmd_scan_selected_disk_done", stopwatch.elapsed().as_secs()).unwrap();
     });
 }
 
