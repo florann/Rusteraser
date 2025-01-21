@@ -48,13 +48,17 @@ fn scan_disk() -> Vec<DiskInfo> {
 
 #[tauri::command]
 fn cmd_scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle) {
-    print!("--------------------------");
+    println!("--------------------------");
     std::thread::spawn(move || {
         let mut disk_name: String = "".to_string();
         if disk.name == "OS" {
             disk_name = "C:\\".to_string();
         }
+        else {
+            disk_name = disk.name + ":\\";
+        }
         println!("disk total space {}", disk.used_space);
+        println!("disk name {}", disk_name);
         let stopwatch = Instant::now(); // Start the stopwatch
         let path = Path::new(&disk_name);
         let handled_result = match scan_folder_start(path, &app_handler, Some(&disk.used_space))

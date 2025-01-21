@@ -34,14 +34,14 @@ pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64)
 
 #[derive(serde::Serialize)]
 pub struct DiskData {
-    path: String,
+    name: String,
     size: u64, 
     children: Vec<DiskData>
 } 
 
 impl DiskData {
-    pub fn new(path: String, size: u64, children: Vec<DiskData>) -> Self {
-        Self { path, size, children }
+    pub fn new(name: String, size: u64, children: Vec<DiskData>) -> Self {
+        Self { name, size, children }
     }
 }
 
@@ -51,7 +51,7 @@ pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk
 
     if !path.is_dir() {
         return Ok(DiskData {
-            path: path.to_path_buf().to_string_lossy().to_string(),
+            name: path.to_path_buf().to_string_lossy().to_string(),
             size: 0,
             children: Vec::new(),
         });
@@ -66,7 +66,7 @@ pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk
         Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
             eprintln!("Permission denied: {}", path.display());
             return Ok(DiskData {
-                path: path.to_path_buf().to_string_lossy().to_string(),
+                name: path.to_path_buf().to_string_lossy().to_string(),
                 size: 0,
                 children: Vec::new(),
             });
@@ -113,7 +113,7 @@ pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk
     }
 
     Ok(DiskData {
-        path: path.to_path_buf().to_string_lossy().to_string(),
+        name: path.to_path_buf().to_string_lossy().to_string(),
         size: total_size,
         children,
     })

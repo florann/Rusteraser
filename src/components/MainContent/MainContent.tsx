@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef  } from "react";
 
 import "./MainContent.css";
 import Browser from "../Browser/Browser";
-import TreeMap from "../TreeMap/TreeMap";
+import TreeMapChart from "../TreeMap/TreeMapChart";
 
 function MainContent() {
     /* Run on load */
@@ -11,7 +11,7 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <TreeMap></TreeMap>
+      <TreeMapChart></TreeMapChart>
     </div>
   );
 }
