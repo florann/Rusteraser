@@ -1,41 +1,26 @@
 import React, { useState, useEffect, useRef, Children  } from "react";
 import { listen } from "@tauri-apps/api/event";
-import { typeTreeMap, isTypeTreeMap} from "../../type/typeTreeMap";
+import { typeTreeMap, isTypeTreeMap, reduceTreeDepth} from "../../type/typeTreeMap";
 import eventDiskSelected from "../../event/eventDiskSelected";
 
 import { Treemap, Tooltip, ResponsiveContainer } from 'recharts';
 
 import "./TreeMapChart.css";
 
-interface TreeMapChartDataParent {
-    name: string,
-    children: Array<object>
-}
-
-
-interface TreeMapChartDataChild {
-    name: string,
-    size: number
-}
-
 function TreeMapChart() {
     // State to store received data chunks
     const [dataChunks, setDataChunks] = useState<typeTreeMap>();
     const unlistenScanDataChunkRef = useRef<(() => void) | null>(null);
-    const [TreeMapChartData, setTreeMapChartData] = useState<Array<TreeMapChartDataParent>>();
+    const [TreeMapChartData, setTreeMapChartData] = useState<Array<any>>();
     
-      
-    function toTreeMapChartData(data: typeTreeMap | undefined) {
+    function toArrayDataChunks(data: typeTreeMap | undefined) {
         if(data !== undefined)
         {
-            let result = Array<TreeMapChartDataParent>();
-            result.push({name : data.name, children : Array<TreeMapChartDataChild>()});
-            for(const child of data.children){
-                result[0].children.push({
-                    name : child.name,
-                    size : child.size
-                })
-            }
+            data = reduceTreeDepth(data);
+            console.log("Data after treatment");
+            console.log(data);
+            let result = Array<object>();
+            result.push(data);
             setTreeMapChartData(result);
         }
     }
@@ -75,21 +60,26 @@ function TreeMapChart() {
     useEffect(() => {
         if (dataChunks) {
             console.log("Data chunks updated:", dataChunks);
-            toTreeMapChartData(dataChunks);
+            toArrayDataChunks(dataChunks);
         }
     }, [dataChunks]);
 
   return (
     <div>
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width={250} height={250}>
         <Treemap
             data={TreeMapChartData ?? []}
+            height={50}
+            width={50}
             dataKey="size"
             nameKey="name"
             stroke="#fff"
             fill="#8884d8"
+            aspectRatio={1}
+            isAnimationActive={false}
+        
         >
-            <Tooltip />
+        <Tooltip />
         </Treemap>
     </ResponsiveContainer>
     </div>
