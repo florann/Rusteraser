@@ -52,7 +52,7 @@ fn cmd_scan_selected_disk(disk: DiskInfo, app_handler: tauri::AppHandle) {
     std::thread::spawn(move || {
         let mut disk_name: String = "".to_string();
         if disk.name == "OS" {
-            disk_name = "C:\\Program Files".to_string();
+            disk_name = "C:\\".to_string();
         }
         else {
             disk_name = disk.name + ":\\";

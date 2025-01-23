@@ -24,9 +24,6 @@ export function reduceTreeDepth(data: typeTreeMap, children_level: number = 2,le
         name: data.name,
         size: Math.log(data.size + 1),
         children: data.children?.map(child => {
-            console.log("Dump de child");
-            console.log(child.size);
-            console.log(Math.log(child.size + 1));
             child.size = Math.log(child.size + 1);
             return reduceTreeDepth(child, children_level, level + 1)
         }),

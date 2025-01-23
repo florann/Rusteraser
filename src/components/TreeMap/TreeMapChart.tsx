@@ -7,6 +7,27 @@ import { Treemap, Tooltip, ResponsiveContainer } from 'recharts';
 
 import "./TreeMapChart.css";
 
+
+type CustomTooltipProps = {
+    active?: boolean;
+    payload?: { value: number, name: String }[];
+    label?: string;
+  };
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        var size = Math.exp(payload[0].value) - 1;
+        return (
+            <div className="custom-tooltip">
+            <p className="label">{`${payload[0].name} : ${size}`}</p>
+            </div>
+        );
+    }
+  
+    return null;
+  };
+
+
 function TreeMapChart() {
     // State to store received data chunks
     const [dataChunks, setDataChunks] = useState<typeTreeMap>();
@@ -17,8 +38,6 @@ function TreeMapChart() {
         if(data !== undefined)
         {
             data = reduceTreeDepth(data);
-            console.log("Data after treatment");
-            console.log(data);
             let result = Array<object>();
             result.push(data);
             setTreeMapChartData(result);
@@ -66,7 +85,7 @@ function TreeMapChart() {
 
   return (
     <div>
-    <ResponsiveContainer width={250} height={250}>
+    <ResponsiveContainer>
         <Treemap
             data={TreeMapChartData ?? []}
             height={50}
@@ -79,7 +98,10 @@ function TreeMapChart() {
             isAnimationActive={false}
         
         >
-        <Tooltip />
+        <Tooltip 
+        allowEscapeViewBox={{ x: true, y: true }} 
+        content={<CustomTooltip></CustomTooltip>}
+        />
         </Treemap>
     </ResponsiveContainer>
     </div>
