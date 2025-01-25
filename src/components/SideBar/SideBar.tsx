@@ -21,9 +21,10 @@ function Sidebar() {
 
     const [scanItems, setScanItems] = useState("");
 
-    async function cmd_scan_selected_disk(disk: DiskInfo)
+    async function cmd_scan_selected_disk_disk_data(disk: DiskInfo)
     {
-      setScanItems(await invoke("cmd_scan_selected_disk", {disk}));
+      //setScanItems(await invoke("cmd_scan_selected_disk_disk_data", {disk}));
+      setScanItems(await invoke("cmd_scan_selected_disk_entity", {disk}));
     }
   
     const handleClick = (index: number) => {
@@ -35,7 +36,7 @@ function Sidebar() {
 
       let item = getItem(index);
       if(item){
-        cmd_scan_selected_disk(item);
+        cmd_scan_selected_disk_disk_data(item);
       }
     };
 

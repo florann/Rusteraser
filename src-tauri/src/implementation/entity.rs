@@ -11,25 +11,25 @@ pub enum Entity {
 
 #[derive(Serialize)]
 pub struct FileEntity {
-    name: String,
-    size: u64,
-    path: String,
-    extension: String,
-    entity_type: String
+    pub name: String,
+    pub size: u64,
+    pub path: String,
+    pub extension: String,
+    pub entity_type: String
 }
 #[derive(Serialize)]
 pub struct FolderEntity {
-    name: String,
-    children: Vec<Entity>,
-    size: u64,
-    path: String,
-    entity_type: String
+    pub name: String,
+    pub size: u64,
+    pub path: String,
+    pub entity_type: String,
+    pub children: Vec<Entity>
 }
 
 
 /* Entity for a file in the system */
 impl FileEntity {
-    fn new(name: String, length: u64, extension: String, path: String) -> Self {
+    pub fn new(name: String, length: u64, extension: String, path: String) -> Self {
         // FileEntity{
         //     name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
         //     path: entity_path.clone(),
@@ -52,7 +52,7 @@ impl FileEntity {
 
 impl FolderEntity
 {
-    fn new(name: String, path: String, length: u64, children: Vec<Entity> ) -> Self {
+    pub fn new(name: String, path: String, length: u64, children: Vec<Entity> ) -> Self {
         FolderEntity{
             name: name,
             path: path,

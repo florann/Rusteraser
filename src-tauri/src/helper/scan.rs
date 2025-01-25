@@ -11,6 +11,8 @@ use tauri::Manager;
 use crate::implementation::disk_data::DiskData;
 
 use crate::helper::helper;
+use crate::implementation::entity::{Entity, FileEntity, FolderEntity};
+
 
 lazy_static! {
     static ref SCAN_PROGRESS: AtomicU64 = AtomicU64::new(0);
@@ -34,7 +36,78 @@ pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64)
 }
 
 
-pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk_size: Option<&u64>) -> io::Result<DiskData> {
+
+pub fn scan_start_entity(path: &Path, app_handler: &tauri::AppHandle, total_disk_size: u64) -> io::Result<FolderEntity> {
+
+    if !path.is_dir() {
+        return Err(io::Error::new(io::ErrorKind::InvalidInput, "Not a directory"));
+    }
+
+    let mut children: Vec<Entity> = Vec::new();
+    let mut total_size: u64 = 0;
+
+    for entry in fs::read_dir(path)? {
+        let entry = entry?;
+        let entry_path = entry.path();
+
+        if entry_path.is_dir() {
+            // Recursive call for subdirectories
+            match scan_start_entity(&entry_path, app_handler, total_disk_size) {
+                Ok(folder_entity) => 
+                {
+                    total_size += folder_entity.size;
+                    children.push(Entity::Folder(folder_entity));
+                }
+                Err(err) if err.kind() == std::io::ErrorKind::PermissionDenied => {
+                    eprintln!("Access denied: {:?}", entry_path);
+                    continue; // Skip this directory
+                }
+                Err(err) => {
+                    return Err(err)
+                }
+            }
+        } else if entry_path.is_file() {
+            // Collect file details
+            match entry.metadata(){
+                Ok(metadata) => {
+                    let file_size = metadata.len();
+                    total_size += file_size;
+        
+                    let file_name = entry.file_name().to_string_lossy().to_string();
+                    let file_path = entry_path.to_string_lossy().to_string();
+                    let file_extension = entry_path
+                        .extension()
+                        .unwrap_or_default()
+                        .to_string_lossy()
+                        .to_string();
+        
+                    let file_entity = FileEntity::new(file_name, file_size, file_extension, file_path);
+                    children.push(Entity::File(file_entity));
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::PermissionDenied => {
+                    eprintln!("Access denied: {:?}", entry_path);
+                    continue; // Skip this file
+                }
+                Err(err) => {
+                    return Err(err)
+                }
+            }
+        }
+    }
+
+    Ok(FolderEntity::new(
+        path.file_name()
+            .unwrap_or_else(|| path.as_os_str())
+            .to_string_lossy()
+            .to_string(),
+        path.to_string_lossy().to_string(),
+        total_size,
+        children,
+    ))
+}
+
+
+pub fn scan_folder_start_disk_data(path: &Path, app_handler: &tauri::AppHandle, total_disk_size: Option<&u64>) -> io::Result<DiskData> {
 
     let total_disk_size = total_disk_size.unwrap_or(&0);
 
@@ -89,7 +162,7 @@ pub fn scan_folder_start(path: &Path, app_handler: &tauri::AppHandle, total_disk
         }
         else if metadata.file_type().is_dir() {
              // Recursive call for subdirectory
-             match scan_folder_start(&entry.path(), app_handler, Some(total_disk_size)) {
+             match scan_folder_start_disk_data(&entry.path(), app_handler, Some(total_disk_size)) {
                 Ok(sub_dir_data) => {
                     total_size += sub_dir_data.size; // Add subdirectory size to total
                     send_scanning_progress(&app_handler, &total_disk_size);

@@ -49,7 +49,7 @@ function TreeMapChart() {
     useEffect(() => {
             const handleEvent = async() => {
             /* Event */
-            const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_done', async (event) => {
+            const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_disk_data_done', async (event) => {
                 let obj_TypeTreeMap = event.payload;
                 try {
                     if(isTypeTreeMap(obj_TypeTreeMap)){

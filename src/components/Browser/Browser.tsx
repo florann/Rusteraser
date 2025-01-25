@@ -16,7 +16,7 @@ function Browser() {
   useEffect(() => {
         const handleEvent = async() => {
         /* Event */
-        const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_done', async (event) => {
+        const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_entity_done', async (event) => {
             let obj_EntityInfo = event.payload;
             try {
                 if(isEntityInfo(obj_EntityInfo)){
@@ -50,11 +50,11 @@ function Browser() {
 
   return (
     <div className="FileContent">
-        {false ? (<div>Loading...</div>) : (dataChunks.map((chunk, index) => (
+        {/* {false ? (<div>Loading...</div>) : (dataChunks.map((chunk, index) => (
             <div  key={index}>
             <Entity index={index} p_EntityInfo={chunk}></Entity>
             </div>
-        )))}
+        )))} */}
     </div>
   );
 }
