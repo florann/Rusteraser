@@ -5,17 +5,14 @@ mod helper;
 mod implementation;
 
 use std::path::Path;
-use std::{fs, thread, path};
 use tauri::{api::dir::read_dir, Manager};
 use sysinfo::{DiskExt, System, SystemExt};
-
-use std::fs::{metadata}; 
 use std::time::Instant;
-
 use implementation::entity::{Entity, FileEntity, FolderEntity};
-use implementation::disk_data::{scan_folder_start, DiskData, rmdir, del};
 
 use disk::disk_info::DiskInfo;
+use implementation::disk_data::DiskData;
+use helper::scan::{rmdir,scan_folder_start,del};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]

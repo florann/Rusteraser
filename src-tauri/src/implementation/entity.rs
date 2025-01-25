@@ -30,8 +30,6 @@ pub struct FolderEntity {
 /* Entity for a file in the system */
 impl FileEntity {
     fn new(name: String, length: u64, extension: String, path: String) -> Self {
-        let len =  length;
-
         // FileEntity{
         //     name: std_path.file_name().unwrap_or(OsStr::new("root")).to_string_lossy().to_string(),
         //     path: entity_path.clone(),
@@ -44,7 +42,7 @@ impl FileEntity {
             name: name,
             path: path,
             entity_type: "file".to_string(),
-            size:len,
+            size: length,
             extension: extension
         }
     }
