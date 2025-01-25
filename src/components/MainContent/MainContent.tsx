@@ -11,7 +11,7 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <TreeMapChart></TreeMapChart>
+      <Browser></Browser>
     </div>
   );
 }

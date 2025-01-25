@@ -30,8 +30,6 @@ export type EntityInfo =
     // Type guard function
 export function isEntityInfo(obj: any): obj is EntityInfo {
   if (!obj || typeof obj !== "object") return false;
-  console.log("Dump de type");
-  console.log(obj.entity_type);
 
   if (obj.entity_type === "file") {
     return (
@@ -47,14 +45,6 @@ export function isEntityInfo(obj: any): obj is EntityInfo {
   }
 
   if (obj.entity_type === "folder") {
-    console.log("Is `obj.name` a string? ", typeof obj.name === "string");
-    console.log("Is `obj.path` a string? ", typeof obj.path === "string");
-    console.log("Is `obj.extension` a string? ", typeof obj.extension === "string");
-    console.log("Is `obj.size` a number? ", typeof obj.size === "number");
-    console.log("Is `obj.entity_type` a string? ", typeof obj.entity_type === "string");
-    console.log("Is `obj.parent_entries` an array? ", Array.isArray(obj.parent_entries));
-    console.log("Is `obj.current_entries` an array? ", Array.isArray(obj.current_entries));
-    console.log("Is `obj.children_entries` an array of arrays? ", Array.isArray(obj.children_entries));
     return (
       typeof obj.name === "string" &&
       typeof obj.path === "string" &&

@@ -35,6 +35,9 @@ function Entity({index, p_EntityInfo}: EntityProps) {
         </div>
       ) : (
         <div className="entity">
+          {entityInfo.children_entries.map((children, index) => (
+            <div></div>
+          ))}  
           <div>[iconFolder]</div>
           <div>
             <strong>Name:</strong> {entityInfo.name} 

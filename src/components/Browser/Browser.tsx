@@ -20,6 +20,8 @@ function Browser() {
             let obj_EntityInfo = event.payload;
             try {
                 if(isEntityInfo(obj_EntityInfo)){
+                    console.log("Dump de obj_entityInfo");
+                    console.log(obj_EntityInfo);
                     setDataChunks((prevChunks) => [...prevChunks, event.payload as EntityInfo]);
                 }
             } catch (error) {
