@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef  } from "react";
-import { Tree } from 'react-arborist'
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
+
+import TableTree from '@atlaskit/table-tree';
 
 import { EntityInfo, isEntityInfo} from "../../type/typeEntityInfo";
 import eventDiskSelected from "../../event/eventDiskSelected";
@@ -69,30 +70,9 @@ function Browser() {
 
   return (
     <div id="FileContent" className="FileContent" >
-        <Tree
-        // Pass the data array here:
-        data={dummyEntityInfo}
-
-        // The container must have a fixed height (and ideally width)
-        // so react-arborist can virtualize the tree.
-        height={400}
-        width={300}
-
-        // Optional: default row height in pixels (if all rows are the same height).
-        // If your rows vary, see "rowHeight" in the docs for a more advanced usage.
-        rowHeight={24}
-
-        // The child render function receives a "node" object with
-        // node.data (your item), node.isOpen, node.isSelected, etc.
-      >
-        {({ node }) => (
-            <div style={{ paddingLeft: node.level * 20 }}>
-                {node.data.name}
-            </div>
-        )}
-      </Tree>
-
-
+        <TableTree>
+            
+        </TableTree>
     </div>
   );
 }
