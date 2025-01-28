@@ -91,11 +91,11 @@ function Browser() {
 
 
     return (
-        <div id="FileContent" className="FileContent" >
+        <div id="FileContent" className="browser" >
             <TableTree>
                 <Headers>
-                <Header width={500}>Chapter title</Header>
-                <Header width={120}>Numbering</Header>
+                    <Header width={500}>Name</Header>
+                    <Header width={120}>Size</Header>
                 </Headers>
                 <Rows
                     items={items}
@@ -105,8 +105,8 @@ function Browser() {
                             items={children}
                             hasChildren={children.length > 0}
                         >
-                            <Cell>{content.title}</Cell>
-                            <Cell>{content.size}</Cell>
+                            <Cell>{Title(content)}</Cell>
+                            <Cell>{Size(content)}</Cell>
                         </Row>
                     )}
                 />
