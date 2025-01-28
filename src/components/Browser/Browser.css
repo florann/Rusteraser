@@ -14,5 +14,8 @@
 }
 
 div[role="rowgroup"] div[role="row"]:hover {
-    background-color: red;
+    background-color: rgb(102, 102, 102);
+}
+div[role="rowgroup"] div[role="row"] {
+    /*margin-left: 10px;*/
 }

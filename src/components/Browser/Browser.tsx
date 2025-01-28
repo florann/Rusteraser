@@ -29,7 +29,7 @@ function EntityInfoToItem(data : EntityInfo[], id: number, level: number): Item[
 
         items.push({
             id: level.toString() + '_' + id.toString(),
-            content : { title : entity.name, size : entity.size },
+            content : { title : entity.name, size : (((entity.size / 1024) / 1024) / 1024).toFixed(2) },
             hasChildren : hasChildren,
             children : EntityInfoToItem(children, id++, level++)
         });
@@ -37,6 +37,7 @@ function EntityInfoToItem(data : EntityInfo[], id: number, level: number): Item[
 
     return items;
 }
+
 
 
 const Title = (props: Content) => <Box as="span">{props.title}</Box>;
