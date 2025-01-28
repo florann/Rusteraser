@@ -4,7 +4,7 @@ export type EntityInfo =
       name: string;
       size: number;
       path: string;
-      extension: string;      
+      extension: "file";      
       entity_type: string;    
     }
   | {
@@ -12,8 +12,8 @@ export type EntityInfo =
       name: string;
       size: number;
       path: string;
-      entity_type: string;  
-      children: string[];
+      entity_type: "folder";  
+      children: EntityInfo[];
     };
 
 
@@ -27,7 +27,7 @@ export function isEntityInfo(obj: any): obj is EntityInfo {
       typeof obj.size === "number" &&
       typeof obj.path === "string" &&
       typeof obj.extension === "string" &&
-      typeof obj.entity_type === "string" 
+      obj.entity_type === "file" 
     );
   }
 
@@ -36,7 +36,7 @@ export function isEntityInfo(obj: any): obj is EntityInfo {
       typeof obj.name === "string" &&
       typeof obj.size === "number" &&
       typeof obj.path === "string" &&
-      typeof obj.entity_type === "string" &&
+      obj.entity_type === "folder" &&
       Array.isArray(obj.children)
     );
   }
