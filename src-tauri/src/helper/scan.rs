@@ -13,14 +13,12 @@ use crate::implementation::disk_data::DiskData;
 use crate::helper::helper;
 use crate::implementation::entity::{Entity, FileEntity, FolderEntity};
 
-
 lazy_static! {
     static ref SCAN_PROGRESS: AtomicU64 = AtomicU64::new(0);
     static ref PERCENTAGE_SCAN_PROGRESS: AtomicU64 = AtomicU64::new(0);
 }
 
-pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64)
-{   
+pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64){   
     if total > &0
     {
         let bytes_scanned = SCAN_PROGRESS.load(Ordering::SeqCst);
@@ -34,8 +32,6 @@ pub fn send_scanning_progress(app_handler: &tauri::AppHandle, total: &u64)
         }
     }
 }
-
-
 
 pub fn scan_start_entity(path: &Path, app_handler: &tauri::AppHandle, total_disk_size: u64) -> io::Result<FolderEntity> {
 
@@ -105,7 +101,6 @@ pub fn scan_start_entity(path: &Path, app_handler: &tauri::AppHandle, total_disk
         children,
     ))
 }
-
 
 pub fn scan_folder_start_disk_data(path: &Path, app_handler: &tauri::AppHandle, total_disk_size: Option<&u64>) -> io::Result<DiskData> {
 
@@ -181,7 +176,6 @@ pub fn scan_folder_start_disk_data(path: &Path, app_handler: &tauri::AppHandle, 
     })
 }
 
-/* rmdir */
 pub fn rmdir(path: String) -> bool {
     return false;
     match fs::remove_dir_all(path) {
@@ -196,7 +190,6 @@ pub fn rmdir(path: String) -> bool {
     }
 }
 
-/* del */
 pub fn del(path: String) -> bool {
     return false;
     match fs::remove_file(&path) {

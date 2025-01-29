@@ -10,6 +10,7 @@ use sysinfo::{DiskExt, System, SystemExt};
 use std::time::Instant;
 
 use implementation::entity::{Entity, FileEntity, FolderEntity};
+use implementation::tb_item::{TbItem, TbItemContent};
 use disk::disk_info::DiskInfo;
 use implementation::disk_data::DiskData;
 use helper::scan::{rmdir, del, scan_folder_start_disk_data, scan_start_entity};
@@ -79,12 +80,6 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
     });
 }
 
-/* Function to give the proper data format for the frontend file browser */
-/* Convert all FolderEntity into Item */
-fn format_disk_entity_to_item(folder_entity: FolderEntity){
-
-}
-
 #[tauri::command]
 fn cmd_scan_selected_disk_disk_data(disk: DiskInfo, app_handler: tauri::AppHandle) {
     println!("--------------------------");
@@ -131,7 +126,7 @@ fn cmd_del(str: String, app_handler: tauri::AppHandle){
 fn main() {
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, scan_disk, dummy_emit, cmd_scan_selected_disk_disk_data, cmd_scan_selected_disk_entity, cmd_rmdir, cmd_del])
+        .invoke_handler(tauri::generate_handler![greet, scan_disk, cmd_scan_selected_disk_disk_data, cmd_scan_selected_disk_entity, cmd_rmdir, cmd_del])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
