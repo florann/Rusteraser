@@ -58,6 +58,7 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
         println!("disk name {}", disk_name);
         let stopwatch = Instant::now(); // Start the stopwatch
         let path = Path::new(&disk_name);
+        /* Scan given the disk */
         let handled_result = match scan_start_entity(path, &app_handler, *Some(&disk.used_space).unwrap())
         {
             Ok(result) => {
@@ -68,12 +69,20 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
                 FolderEntity::new("".to_string(), "".to_string(), 0, Vec::new())
             }
         };
+        /* Format data into different output ( maybe process into different thread if there is more than one output) */
+
 
         println!("-------------END-------------");
 
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", &handled_result).unwrap();
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", stopwatch.elapsed().as_secs()).unwrap();
     });
+}
+
+/* Function to give the proper data format for the frontend file browser */
+/* Convert all FolderEntity into Item */
+fn format_disk_entity_to_item(folder_entity: FolderEntity){
+
 }
 
 #[tauri::command]
@@ -117,29 +126,6 @@ fn cmd_rmdir(str: String, app_handler: tauri::AppHandle){
 fn cmd_del(str: String, app_handler: tauri::AppHandle){
     let result = del(str);
     app_handler.emit_all("event-del", result).unwrap();
-}
-
-/* TODO : Setup this command to take disk root as parameter */
-/* Frontend side setup the treemap */
-#[tauri::command]
-fn dummy_emit(app_handler: tauri::AppHandle){
-    // std::thread::spawn(move || {
-    //     let stopwatch = Instant::now(); // Start the stopwatch
-    //     let path = Path::new("D://");
-    //     let handled_result = match(scan_folder_start(path, &app_handler, Some(&1000186310656)))
-    //     {
-    //         Ok(result) => {
-    //             result
-    //         }
-    //         Err(err) =>  {
-    //             println!("error : {}", err);
-    //             DiskData::new("".to_string(), 0, Vec::new())
-    //         }
-    //     };
-
-    //     app_handler.emit_all("dummy-scan", &handled_result).unwrap();
-    //     app_handler.emit_all("dummy-scan", stopwatch.elapsed().as_secs()).unwrap();
-    // });
 }
 
 fn main() {

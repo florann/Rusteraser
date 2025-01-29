@@ -11,7 +11,12 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <Browser></Browser>
+      <div>
+        <Browser></Browser>
+      </div>
+      <div>
+        
+      </div>
     </div>
   );
 }
