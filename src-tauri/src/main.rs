@@ -14,6 +14,7 @@ use implementation::tb_item::{TbItem, TbItemContent};
 use disk::disk_info::DiskInfo;
 use implementation::disk_data::DiskData;
 use helper::scan::{rmdir, del, scan_folder_start_disk_data, scan_start_entity};
+use helper::helper::{format_entities_to_items};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -71,11 +72,11 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
             }
         };
         /* Format data into different output ( maybe process into different thread if there is more than one output) */
-
+        let tabletree_item = format_entities_to_items(handled_result);
 
         println!("-------------END-------------");
 
-        app_handler.emit_all("cmd_scan_selected_disk_entity_done", &handled_result).unwrap();
+        app_handler.emit_all("cmd_scan_selected_disk_entity_done", &tabletree_item).unwrap();
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", stopwatch.elapsed().as_secs()).unwrap();
     });
 }

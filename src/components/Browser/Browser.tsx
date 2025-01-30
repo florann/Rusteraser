@@ -2,67 +2,36 @@ import React, { useState, useEffect, useRef  } from "react";
 import { listen } from "@tauri-apps/api/event";
 import TableTree, { Cell, Header, Headers, Row, Rows } from '@atlaskit/table-tree';
 import { Box } from '@atlaskit/primitives';
-import { EntityInfo, isEntityInfo} from "../../type/typeEntityInfo";
+import { Item, ItemContent, isItem} from "../../type/typeItem";
 import eventDiskSelected from "../../event/eventDiskSelected";
 import "./Browser.css";
 
-/* Type creation for the TableTree */
-type Content = { title: string, size: number};
-
-type Item = {
-	id: string;
-	content: Content;
-	hasChildren: boolean;
-	children?: Item[];
-};
-
-function EntityInfoToItem(data : EntityInfo[], id: number, level: number): Item[] {
-    let items: Item[] = [];
-    for(const entity of data)
-    {   
-        let hasChildren = false;
-        let children: EntityInfo[] = [];
-        if(entity.entity_type === "folder"){
-            hasChildren = (entity.children.length > 0) ? true : false;
-            children = entity.children;
-        }
-
-        items.push({
-            id: level.toString() + '_' + id.toString(),
-            content : { title : entity.name, size : (((entity.size / 1024) / 1024) / 1024).toFixed(2) },
-            hasChildren : hasChildren,
-            children : EntityInfoToItem(children, id++, level++)
-        });
-    }
-
-    return items;
-}
-
-
-
-const Title = (props: Content) => <Box as="span">{props.title}</Box>;
-const Size = (props: Content) => <Box as="span">{props.size}</Box>;
-
+const Title = (props: ItemContent) => <Box as="span">{props.title}</Box>;
+const Size = (props: ItemContent) => <Box as="span">{props.size}</Box>;
 
 function Browser() {
-    // State to store received data chunks
-    const [dataChunks, setDataChunks] = useState<EntityInfo[]>([]);
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<Item>({
+        id : "0", 
+        content : {title: "", size : 0},
+        hasChildren : false,
+        children : []
+    });
     const unlistenScanDataChunkRef = useRef<(() => void) | null>(null);
 
     /* Run on load */
     useEffect(() => {
-            //setDataChunks(dummyEntityInfo);
             const handleEvent = async() => {
             /* Event */
             const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_entity_done', async (event) => {
-                let obj_EntityInfo = event.payload;
                 try {
-                    if(isEntityInfo(obj_EntityInfo)){
-                        setDataChunks((prevChunks) => [...prevChunks, event.payload as EntityInfo]);
+                    console.log("payload");
+                    console.log(event.payload);
+                    if(isItem(event.payload)){
+                        console.log("success");
+                        setItems(event.payload);
                     }
                 } catch (error) {
-                console.error("Failed to parse EntityInfo:", error);
+                console.error("Failed to parse payload:", error);
                 }
             });
             unlistenScanDataChunkRef.current = unlistenScanDataChunk;
@@ -71,7 +40,7 @@ function Browser() {
             handleEvent();
 
             eventDiskSelected.on("clearDiv",() => {
-                setDataChunks([]);
+                setItems(Object);
             });
 
             // Cleanup listeners on unmount
@@ -83,13 +52,6 @@ function Browser() {
             eventDiskSelected.off("clearDiv"); 
             };
         }, []); 
-    
-    /* Run on dataChunks update */
-    useEffect(() => {
-        setItems(EntityInfoToItem(dataChunks, 0, 0));
-    }
-    ,[dataChunks]);
-
 
     return (
         <div id="FileContent" className="browser" >
@@ -99,7 +61,7 @@ function Browser() {
                     <Header width={120}>Size</Header>
                 </Headers>
                 <Rows
-                    items={items}
+                    items={items ? [items] :  undefined}
                     render={({ id, content, children = [] }: Item) => (
                         <Row
                             itemId={id}

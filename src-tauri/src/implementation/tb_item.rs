@@ -5,12 +5,12 @@ use serde::Serialize;
 pub struct TbItem {
     pub id: u64,
     pub content: TbItemContent,
-    pub hasChildren: bool,
+    pub hasChildren: bool, // Not snake to respect React tabletree name
     pub children: Vec<TbItem>
 }
 
 #[derive(Serialize)]
 pub struct TbItemContent {
-    title: String,
-    size: u64
+    pub title: String,
+    pub size: u64
 }
