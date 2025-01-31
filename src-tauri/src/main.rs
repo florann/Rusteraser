@@ -14,7 +14,7 @@ use implementation::tb_item::{TbItem, TbItemContent};
 use disk::disk_info::DiskInfo;
 use implementation::disk_data::DiskData;
 use helper::scan::{rmdir, del, scan_folder_start_disk_data, scan_start_entity};
-use helper::helper::{format_entities_to_items};
+use helper::helper::{format_entities_to_items, sort_entities, get_list_heavy_files};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -61,7 +61,7 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
         let stopwatch = Instant::now(); // Start the stopwatch
         let path = Path::new(&disk_name);
         /* Scan given the disk */
-        let handled_result = match scan_start_entity(path, &app_handler, *Some(&disk.used_space).unwrap())
+        let mut handled_result = match scan_start_entity(path, &app_handler, *Some(&disk.used_space).unwrap())
         {
             Ok(result) => {
                 result
@@ -72,12 +72,18 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
             }
         };
         /* Format data into different output ( maybe process into different thread if there is more than one output) */
-        let tabletree_item = format_entities_to_items(handled_result);
+        sort_entities(&mut handled_result);
+        let tabletree_item = format_entities_to_items(&handled_result);
+        let mut vec_heavy_file: Vec<FileEntity> = Vec::new();
+        let max_file: u64 = 10;
+        let mut cpt_file: u64 = 0;
+        get_list_heavy_files(&handled_result, &mut vec_heavy_file, &max_file, &mut cpt_file);
 
         println!("-------------END-------------");
 
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", &tabletree_item).unwrap();
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", stopwatch.elapsed().as_secs()).unwrap();
+        app_handler.emit_all("cmd_scan_selected_disk_entity_done", &vec_heavy_file).unwrap();
     });
 }
 
