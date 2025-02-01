@@ -13,13 +13,19 @@
 }
 
 div[role="rowgroup"] div[role="row"]:hover {
-    background-color: rgb(102, 102, 102);
+    background-color: rgb(77, 77, 77);
 }
 
 div[role="treegrid"] {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: #373737;
+}
+
+div[role="row"] div[role="columnheader"] {
+    color: #efefef;
+    justify-content: center;
+
 }
 
 div[role="treegrid"]:first-child {

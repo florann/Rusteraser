@@ -12,8 +12,12 @@ function MainContent() {
   return (
     <div className="mainContent">
       <div className="box">
-        <div>
-          Title
+        <div className="boxTitle">
+          <div className="title">
+            <div className="innerTitle">
+              Title
+            </div>
+          </div>
         </div>
         <div className="boxContent">
           <Browser></Browser>
