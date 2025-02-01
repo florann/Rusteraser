@@ -1,5 +1,23 @@
 .mainContent
 {
-  background-color: rgb(58, 58, 58);
-  width: 95%;
+  background-color: rgb(47 47 47);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+/* We want two equal columns, so each item can be 50% width */
+.box {
+  flex: 0 0 50%;
+  box-sizing: border-box;
+}
+
+.boxContent {
+  border: 1px solid #252525;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px #161616;
+}
+@media (max-width: 768px) {
+  /* At or below 768px, make each item take full width */
+
 }

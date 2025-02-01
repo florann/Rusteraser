@@ -24,10 +24,7 @@ function Browser() {
             /* Event */
             const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_entity_done', async (event) => {
                 try {
-                    console.log("payload");
-                    console.log(event.payload);
                     if(isItem(event.payload)){
-                        console.log("success");
                         setItems(event.payload);
                     }
                 } catch (error) {
@@ -54,7 +51,7 @@ function Browser() {
         }, []); 
 
     return (
-        <div id="FileContent" className="browser" >
+        <div id="Browser" className="browser" >
             <TableTree>
                 <Headers>
                     <Header width={500}>Name</Header>

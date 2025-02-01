@@ -11,11 +11,19 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <div>
-        <Browser></Browser>
+      <div className="box">
+        <div>
+          Title
+        </div>
+        <div className="boxContent">
+          <Browser></Browser>
+        </div>
       </div>
-      <div>
-        
+      <div className="box">
+        DummyContentDummyContentDummyContentDummyConten
+        tDummyContentDummyContentDummyContentDummyContentDummyCon
+        tentDummyContentDummyContentDummyContentDummyContentDummyC
+        ontentDummyContentDummyContentDummyContent
       </div>
     </div>
   );
