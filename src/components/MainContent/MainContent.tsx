@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef  } from "react";
 
 import "./MainContent.css";
+import Box from "../Box/Box";
 import Browser from "../Browser/Browser";
-import TreeMapChart from "../TreeMap/TreeMapChart";
+import Finder from "../Finder/finder";
 
 function MainContent() {
     /* Run on load */
@@ -11,24 +12,8 @@ function MainContent() {
 
   return (
     <div className="mainContent">
-      <div className="box">
-        <div className="boxTitle">
-          <div className="title">
-            <div className="innerTitle">
-              Title
-            </div>
-          </div>
-        </div>
-        <div className="boxContent">
-          <Browser></Browser>
-        </div>
-      </div>
-      <div className="box">
-        DummyContentDummyContentDummyContentDummyConten
-        tDummyContentDummyContentDummyContentDummyContentDummyCon
-        tentDummyContentDummyContentDummyContentDummyContentDummyC
-        ontentDummyContentDummyContentDummyContent
-      </div>
+      <Box title="Browser" ReactComponent={<Browser />}></Box>
+      <Box title="Finder" ReactComponent={<Finder />}></Box>
     </div>
   );
 }

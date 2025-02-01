@@ -54,8 +54,8 @@ function Browser() {
         <div id="Browser" className="browser" >
             <TableTree>
                 <Headers>
-                    <Header width={500}>Name</Header>
-                    <Header width={120}>Size</Header>
+                    <Header width={"80%"}>Name</Header>
+                    <Header width={"20%"}>Size</Header>
                 </Headers>
                 <Rows
                     items={items ? [items] :  undefined}
