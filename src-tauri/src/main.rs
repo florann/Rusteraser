@@ -74,10 +74,7 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
         /* Format data into different output ( maybe process into different thread if there is more than one output) */
         sort_entities(&mut handled_result);
         let tabletree_item = format_entities_to_items(&handled_result);
-        let mut vec_heavy_file: Vec<FileEntity> = Vec::new();
-        let max_file: u64 = 10;
-        let mut cpt_file: u64 = 0;
-        get_list_heavy_files(&handled_result, &mut vec_heavy_file, &max_file, &mut cpt_file);
+        let vec_heavy_file = get_list_heavy_files(&handled_result, 10);
 
         println!("-------------END-------------");
 

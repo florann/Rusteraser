@@ -94,7 +94,16 @@ pub fn sort_entities(folder_entity: &mut FolderEntity) -> () {
     }
 }
 
-pub fn get_list_heavy_files(folder_entity: &FolderEntity, vec_files: &mut Vec<FileEntity>, max_file: &u64, cpt_file: &mut u64) -> () {
+pub fn get_list_heavy_files(folder_entity: &FolderEntity, max_file: u64) -> Vec<FileEntity> {
+    let mut cpt_file = 0;
+    let mut vec_files: Vec<FileEntity> = Vec::new();
+
+    get_list_heavy_files_rec(folder_entity, &mut vec_files, &max_file, &mut cpt_file);
+
+    vec_files
+}
+
+fn get_list_heavy_files_rec(folder_entity: &FolderEntity, vec_files: &mut Vec<FileEntity>, max_file: &u64, cpt_file: &mut u64) -> () {
     if max_file <= cpt_file {
         return;
     }
@@ -113,7 +122,7 @@ pub fn get_list_heavy_files(folder_entity: &FolderEntity, vec_files: &mut Vec<Fi
                *cpt_file = *cpt_file + 1;
             },
             Entity::Folder(folder) => {
-                get_list_heavy_files(&folder, vec_files, max_file, cpt_file);
+                get_list_heavy_files_rec(&folder, vec_files, max_file, cpt_file);
             }
         }
     }
