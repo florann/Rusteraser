@@ -21,18 +21,17 @@ function Browser() {
     /* Run on load */
     useEffect(() => {
             const handleEvent = async() => {
-            /* Event */
-            const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_entity_done', async (event) => {
-                try {
-                    if(isItem(event.payload)){
-                        setItems(event.payload);
+                /* Event */
+                const unlistenScanDataChunk = await listen('cmd_scan_selected_disk_entity_done', async (event) => {
+                    try {
+                        if(isItem(event.payload)){
+                            setItems(event.payload);
+                        }
+                    } catch (error) {
+                    console.error("Failed to parse payload:", error);
                     }
-                } catch (error) {
-                console.error("Failed to parse payload:", error);
-                }
-            });
-            unlistenScanDataChunkRef.current = unlistenScanDataChunk;
-
+                });
+                unlistenScanDataChunkRef.current = unlistenScanDataChunk;
             };
             handleEvent();
 

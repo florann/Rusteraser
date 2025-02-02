@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef  } from "react";
 import "./MainContent.css";
 import Box from "../Box/Box";
 import Browser from "../Browser/Browser";
-import Finder from "../Finder/finder";
+import Finder from "../Finder/Finder";
 
 function MainContent() {
     /* Run on load */

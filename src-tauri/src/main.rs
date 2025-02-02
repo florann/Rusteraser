@@ -75,12 +75,12 @@ fn cmd_scan_selected_disk_entity(disk: DiskInfo, app_handler: tauri::AppHandle){
         sort_entities(&mut handled_result);
         let tabletree_item = format_entities_to_items(&handled_result);
         let vec_heavy_file = get_list_heavy_files(&handled_result, 10);
-
+        println!("size heavy file : {}", vec_heavy_file.len());
         println!("-------------END-------------");
 
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", &tabletree_item).unwrap();
         app_handler.emit_all("cmd_scan_selected_disk_entity_done", stopwatch.elapsed().as_secs()).unwrap();
-        app_handler.emit_all("cmd_scan_selected_disk_entity_done", &vec_heavy_file).unwrap();
+        app_handler.emit_all("cmd_scan_heavy_file_done", &vec_heavy_file).unwrap();
     });
 }
 
