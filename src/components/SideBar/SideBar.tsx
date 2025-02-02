@@ -3,8 +3,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./Sidebar.css";
 import { DiskInfo } from "../../interfaces/DiskInfo";
 import DetailSideBar from "../DetailSideBar/DetailSideBar";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHardDrive } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHardDrive } from '@fortawesome/free-regular-svg-icons';
 
 import eventDiskSelected from "../../event/eventDiskSelected";
 

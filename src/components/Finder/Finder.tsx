@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
-import "./Finder.css";
 import { EntityInfo, isEntityInfo } from "../../type/typeEntityInfo";
-import { parse } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileLines } from "@fortawesome/free-regular-svg-icons";
+
+import "./Finder.css";
 
 function Finder() {
 
@@ -44,7 +46,14 @@ function Finder() {
 
   return (
     <div className="finder">
-    
+      {entityInfo.map((file, index) => (
+          <div className="file">
+            <FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
+            <div>
+              {file.name}
+            </div>
+          </div>
+      ))}
     </div>
   );
 }
