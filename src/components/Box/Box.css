@@ -2,13 +2,15 @@
 .box {
     flex: 1 0 50%;
     box-sizing: border-box;
-
+    min-width: 550px;
   }
   
   .boxContent {
     border: 1px solid #252525;
     border-radius: 10px;
     box-shadow: 0px 0px 3px #161616;
+    background-color: #373737;
+    margin: 10px;
   }
   
   .boxTitle{

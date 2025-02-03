@@ -48,8 +48,10 @@ function Finder() {
     <div className="finder">
       {entityInfo.map((file, index) => (
           <div className="file">
-            <FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
-            <div>
+            <div className="fileLogo">
+              <FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
+            </div>
+            <div className="fileContent">
               {file.name}
             </div>
           </div>

@@ -2,3 +2,22 @@
     display: flex;
     flex-direction: column;
 }
+
+.file {
+    display: flex;
+}
+
+.fileLogo {
+    padding: 20px;
+}
+
+.fileContent {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.fileLogo > svg {
+    height: 50px;
+}
