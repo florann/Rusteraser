@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
 import { EntityInfo, isEntityInfo } from "../../type/typeEntityInfo";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileLines } from "@fortawesome/free-regular-svg-icons";
+import { faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 import "./Finder.css";
 
@@ -52,7 +52,17 @@ function Finder() {
               <FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
             </div>
             <div className="fileContent">
-              {file.name}
+              <div className="filePath" style={{display: 'none'}}>{file.path}</div>
+              <div>
+                {file.name}
+              </div>
+              <div>
+                Size :&nbsp;
+                {file.size}
+              </div>
+            </div>
+            <div className="fileAction">
+              <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
             </div>
           </div>
       ))}

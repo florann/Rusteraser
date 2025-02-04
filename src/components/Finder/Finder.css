@@ -3,8 +3,13 @@
     flex-direction: column;
 }
 
-.file {
+.finder .file {
     display: flex;
+    border-bottom: 1px solid #4e4e4e;
+}
+
+.finder .file:last-child{
+    border-bottom: none !important;
 }
 
 .fileLogo {
@@ -13,11 +18,31 @@
 
 .fileContent {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     width: 100%;
     justify-content: center;
+    text-align: left;
 }
 
 .fileLogo > svg {
     height: 50px;
+}
+
+.fileAction {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .fileAction:first-child {
+    border-top-right-radius: 10px;
+} */
+
+.fileAction:first-of-type:hover {
+    background-color: #4e4e4e;
+}
+
+.fileAction > svg {
+    height: 15px;
+    padding: 20px;
 }
