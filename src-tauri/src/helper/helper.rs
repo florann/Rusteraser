@@ -45,7 +45,8 @@ fn build_item(entity: &Entity, id: &u64) -> TbItem {
                 id: *id,
                 content : TbItemContent{
                     title : file.name.clone(),
-                    size : file.size
+                    size : file.size,
+                    path: file.path.clone()
                 },
                 hasChildren : false, 
                 children : Vec::new()
@@ -57,7 +58,8 @@ fn build_item(entity: &Entity, id: &u64) -> TbItem {
                 content : 
                     TbItemContent {
                     title : folder.name.clone(),
-                    size : folder.size
+                    size : folder.size,
+                    path : folder.path.clone()
                 },
                 hasChildren : false, 
                 children : Vec::new()

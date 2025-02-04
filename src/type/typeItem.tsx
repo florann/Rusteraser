@@ -1,5 +1,5 @@
 /* Type for tabletree */
-export type ItemContent = { title: string, size: number};
+export type ItemContent = { title: string, size: number, path: string};
 
 export type Item = {
 	id: string;
@@ -30,6 +30,7 @@ function isItemContent(obj: unknown): boolean {
     const candidate = obj as ItemContent;
     return (
       typeof candidate.title === 'string' &&
-      typeof candidate.size === 'number'
+      typeof candidate.size === 'number' && 
+      typeof candidate.path === 'string'
     );
   }

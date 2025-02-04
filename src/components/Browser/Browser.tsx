@@ -4,15 +4,32 @@ import TableTree, { Cell, Header, Headers, Row, Rows } from '@atlaskit/table-tre
 import { Box } from '@atlaskit/primitives';
 import { Item, ItemContent, isItem} from "../../type/typeItem";
 import eventDiskSelected from "../../event/eventDiskSelected";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import "./Browser.css";
 
 const Title = (props: ItemContent) => <Box as="span">{props.title}</Box>;
-const Size = (props: ItemContent) => <Box as="span">{props.size}&nbsp;Mo</Box>;
+const Size = (props: ItemContent) => {
+    const sizeInMB = props.size / (1024 * 1024);
+    const formattedSize =
+      sizeInMB >= 1000
+        ? `${(sizeInMB / 1024).toFixed(2)} Go`
+        : `${sizeInMB.toFixed(0)} Mo`;
+    
+        return <Box as="span">
+                    <div className="browserSizeContent">
+                        <div>{formattedSize}</div>
+                        <div className="actionBrowser" data-file-path={props.path}>
+                            <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
+                        </div>
+                    </div>
+                </Box>;
+}
 
 function Browser() {
     const [items, setItems] = useState<Item>({
         id : "0", 
-        content : {title: "", size : 0},
+        content : {title: "", size : 0, path: ""},
         hasChildren : false,
         children : []
     });

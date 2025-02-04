@@ -12,5 +12,6 @@ pub struct TbItem {
 #[derive(Serialize)]
 pub struct TbItemContent {
     pub title: String,
-    pub size: u64
+    pub size: u64,
+    pub path: String
 }
