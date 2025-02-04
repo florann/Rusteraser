@@ -58,7 +58,7 @@ function Finder() {
               </div>
               <div>
                 Size :&nbsp;
-                {file.size}
+                {file.size} &nbsp;Mo
               </div>
             </div>
             <div className="fileAction">

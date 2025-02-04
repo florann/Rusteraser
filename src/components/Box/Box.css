@@ -12,11 +12,11 @@
     background-color: #373737;
     margin: 10px;
     max-height: 88vh;
-    overflow-y: scroll;
+    overflow: auto;
   }
 
-  .boxContent:has(.Browser) {
-    overflow-x: scroll;
+  .boxContent:has(#Browser) {
+    /*overflow-x: scroll;*/
 }
 
   

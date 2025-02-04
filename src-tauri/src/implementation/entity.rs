@@ -33,7 +33,7 @@ impl FileEntity {
             name: name,
             path: path,
             entity_type: "file".to_string(),
-            size: length,
+            size: ((length / 1024) / 1024),
             extension: extension
         }
     }

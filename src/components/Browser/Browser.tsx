@@ -7,7 +7,7 @@ import eventDiskSelected from "../../event/eventDiskSelected";
 import "./Browser.css";
 
 const Title = (props: ItemContent) => <Box as="span">{props.title}</Box>;
-const Size = (props: ItemContent) => <Box as="span">{props.size}</Box>;
+const Size = (props: ItemContent) => <Box as="span">{props.size}&nbsp;Mo</Box>;
 
 function Browser() {
     const [items, setItems] = useState<Item>({
