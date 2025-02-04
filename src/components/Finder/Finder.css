@@ -5,7 +5,7 @@
 
 .finder .file {
     display: flex;
-    border-bottom: 1px solid #4e4e4e;
+    border-bottom: 1px solid #484848;
 }
 
 .finder .file:last-child{
@@ -38,9 +38,18 @@
     border-top-right-radius: 10px;
 } */
 
-.fileAction:first-of-type:hover {
-    background-color: #4e4e4e;
+.fileAction:hover {
+    background-color: rgb(77, 77, 77);
 }
+
+.finder .file:first-of-type .fileAction:hover{
+    border-top-right-radius: 10px;
+}
+
+.finder .file:last-of-type .fileAction:hover{
+    border-bottom-right-radius: 10px;
+}
+
 
 .fileAction > svg {
     height: 15px;
