@@ -19,7 +19,7 @@ const Size = (props: ItemContent) => {
         return <Box as="span">
                     <div className="browserSizeContent">
                         <div>{formattedSize}</div>
-                        <div className="actionBrowser" data-file-path={props.path}>
+                        <div className="actionBrowser mouseClick" data-file-path={props.path}>
                             <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
                         </div>
                     </div>
