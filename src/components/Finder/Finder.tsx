@@ -5,7 +5,7 @@ import { listen } from "@tauri-apps/api/event";
 import { EntityInfo, isEntityInfo } from "../../type/typeEntityInfo";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import ConfirmPop from "../ConfirmPop/ConfirmPop"
+import ConfirmPop from "../ConfirmPopup/ConfirmPopup"
 
 import "./Finder.css";
 
