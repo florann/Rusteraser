@@ -7,11 +7,12 @@ type ConfirmPopupProps = {
   message: string;
   onYes: () => void;
   onNo: () => void;
+  position: { top: number; left: number };
 };
 
-const ConfirmPopup = ({ message, onYes, onNo }: ConfirmPopupProps) => {
+const ConfirmPopup = ({ message, onYes, onNo, position }: ConfirmPopupProps) => {
   return createPortal(
-    <div className="confirm">
+    <div className="confirm" style={{top: position.top, left: position.left}}>
       <div>{message}</div>
       <div className="btn_yes">
           <FontAwesomeIcon icon={faCheck} onClick={onYes}></FontAwesomeIcon>
@@ -24,21 +25,33 @@ const ConfirmPopup = ({ message, onYes, onNo }: ConfirmPopupProps) => {
   );
 };
 
-let setPopupState: (
-  (state: 
-    { message: string; onYes: () => void } | null) => void) | null = null;
+type PopupState = { 
+  message: string; 
+  onYes: () => void; 
+  position: { top: number; left: number } 
+} | null;
+
+let setPopupState: ((state: PopupState) => void) | null = null;
 
 // **Global Function to Spawn the Popup**
-export function spawnConfirmPopup(message: string, onYes: () => void) {
+export function spawnConfirmPopup(message: string, onYes: () => void, event: React.MouseEvent) {
   if (setPopupState) {
-    setPopupState({ message, onYes });
+    console.log("spawn function");
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    setPopupState({
+      message,
+      onYes,
+      position: {
+        top: rect.top + window.scrollY + rect.height + 5, // Position below clicked element
+        left: rect.left + window.scrollX
+      }
+    });
   }
 }
 
 // **Popup Manager Component**
 const ConfirmPopupManager = () => {
-  //const [popupState, setPopupStateLocal] = useState<{ message: string; onYes: () => void } | null | undefined>(null);
-  const [popupState, setPopupStateLocal] = useState<{ message: string; onYes: () => void } | null>(null);
+  const [popupState, setPopupStateLocal] = useState<PopupState>(null);
 
   useEffect(() => {
     setPopupState = setPopupStateLocal;
@@ -52,9 +65,10 @@ const ConfirmPopupManager = () => {
       message={popupState.message}
       onYes={() => {
         popupState.onYes();
-        setPopupStateLocal(null); // ✅ No TypeScript error
+        setPopupStateLocal(null);
       }}
-      onNo={() => setPopupStateLocal(null)} // ✅ No TypeScript error
+      onNo={() => setPopupStateLocal(null)}
+      position={popupState.position}
     />
   ) : null;
 };

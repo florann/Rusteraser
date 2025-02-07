@@ -5,16 +5,9 @@ import { listen } from "@tauri-apps/api/event";
 import { EntityInfo, isEntityInfo } from "../../type/typeEntityInfo";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import ConfirmPop from "../ConfirmPopup/ConfirmPopup"
+import { spawnConfirmPopup } from "../ConfirmPopup/ConfirmPopup";
 
 import "./Finder.css";
-
-const SpawnedConfirmPop = () => {
-  return createPortal(
-    <ConfirmPop></ConfirmPop>,
-    document.body // Append it outside the main component hierarchy
-  );
-};
 
 function Finder() {
 
@@ -57,7 +50,7 @@ function Finder() {
   return (
     <div className="finder">
       {entityInfo.map((file, index) => (
-          <div className="file">
+          <div className="file" key={index}>
             <div className="fileLogo">
               <FontAwesomeIcon icon={faFileLines}></FontAwesomeIcon>
             </div>
@@ -71,10 +64,9 @@ function Finder() {
                 {file.size} &nbsp;Mo
               </div>
             </div>
-            <div className="fileAction mouseClick"  onClick={() => setIsSpawned(true)}>
+            <div className="fileAction mouseClick"  onClick={(e) => {console.log("ouioui");spawnConfirmPopup("oui oui la popup", () => alert("prout yes"), e)}}>
               <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
             </div>
-            {isSpawned && <SpawnedConfirmPop />}
           </div>
       ))}
     </div>

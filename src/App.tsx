@@ -6,6 +6,7 @@ import "./App.css";
 
 import Sidebar from "./components/SideBar/SideBar";
 import MainContent from "./components/MainContent/MainContent";
+import ConfirmPopupManager from "./components/ConfirmPopup/ConfirmPopup";
 
 function App() {
   /* Scan directory */ 
@@ -21,6 +22,7 @@ function App() {
     <div className="container" style={{display: "flex", flexDirection : "row"}}>
       <Sidebar></Sidebar>
       <MainContent></MainContent>
+      <ConfirmPopupManager></ConfirmPopupManager>
       </div>
   );
 }
