@@ -22,6 +22,7 @@ function App() {
     <div className="container" style={{display: "flex", flexDirection : "row"}}>
       <Sidebar></Sidebar>
       <MainContent></MainContent>
+      {/* Adding singleton popup for user confirmation */}
       <ConfirmPopupManager></ConfirmPopupManager>
       </div>
   );

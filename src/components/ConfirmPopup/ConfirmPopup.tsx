@@ -9,7 +9,7 @@ type ConfirmPopupProps = {
   onNo: () => void;
   position: { top: number; left: number };
 };
-
+/* Singleton popup */
 const ConfirmPopup = ({ message, onYes, onNo, position }: ConfirmPopupProps) => {
   return createPortal(
     <div className="confirm" style={{top: position.top, left: position.left}}>
