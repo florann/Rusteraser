@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
+import "./ConfirmPopup.css";
+
 type ConfirmPopupProps = {
   message: string;
   onYes: () => void;
@@ -14,11 +16,13 @@ const ConfirmPopup = ({ message, onYes, onNo, position }: ConfirmPopupProps) => 
   return createPortal(
     <div className="confirm" style={{top: position.top, left: position.left}}>
       <div>{message}</div>
-      <div className="btn_yes">
-          <FontAwesomeIcon icon={faCheck} onClick={onYes}></FontAwesomeIcon>
-      </div>
-      <div className="btn_no" onClick={onNo}>
-          <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+      <div className="confirmContent">
+        <div className="btn_yes confirmItem">
+            <FontAwesomeIcon icon={faCheck} onClick={onYes}></FontAwesomeIcon>
+        </div>
+        <div className="btn_no confirmItem" onClick={onNo}>
+            <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+        </div>
       </div>
   </div>,
     document.body
@@ -37,7 +41,9 @@ let setPopupState: ((state: PopupState) => void) | null = null;
 export function spawnConfirmPopup(message: string, onYes: () => void, event: React.MouseEvent) {
   if (setPopupState) {
     console.log("spawn function");
+    console.log(event.target);
     const rect = (event.target as HTMLElement).getBoundingClientRect();
+    console.log(rect);
     setPopupState({
       message,
       onYes,

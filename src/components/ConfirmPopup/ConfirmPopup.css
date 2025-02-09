@@ -1,0 +1,21 @@
+.confirm{
+    position: absolute;
+    border: 1px solid #252525;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px #161616;
+    background-color: #484848;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.confirmContent{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.confirmItem{
+    flex: 1;
+    text-align: center;
+}
