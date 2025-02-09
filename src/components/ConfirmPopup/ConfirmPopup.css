@@ -11,6 +11,7 @@
 
 .confirmContent{
     display: flex;
+    gap: 5px;
     flex-direction: row;
     width: 100%;
 }
@@ -18,4 +19,14 @@
 .confirmItem{
     flex: 1;
     text-align: center;
+}
+
+.btn_yes{
+    background: green;
+    border-radius: 5px;
+}
+
+.btn_no{
+    background: red;
+    border-radius: 5px;
 }
