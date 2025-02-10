@@ -191,7 +191,6 @@ pub fn rmdir(path: String) -> bool {
 }
 
 pub fn del(path: String) -> bool {
-    return false;
     match fs::remove_file(&path) {
         Ok(_) => {
             println!("File '{}' successfully deleted.", path);

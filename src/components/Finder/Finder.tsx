@@ -13,7 +13,15 @@ function Finder() {
 
     const [entityInfo, setEntityInfo] = useState<EntityInfo[]>([]);
     const unlistenScanHeavyFileRef = useRef<(() => void) | null>(null);
-    const [isSpawned, setIsSpawned] = useState(false);
+    
+    const [delInfo, setDelInfo] = useState<boolean>();
+
+    /* Delete function will call rust on click */
+    async function del_action(path: string)
+    {
+      setDelInfo(await invoke("cmd_del",{path}));
+    }
+
     /* Run on load */
     useEffect(() => {
       const handleEvent = async() => {
@@ -47,6 +55,14 @@ function Finder() {
       };
     }, []); // The empty dependency array ensures this runs only once (on mount)
 
+    useEffect(() => {
+      if(delInfo){
+        console.log("del success")
+      }else{
+        console.log("del failure")
+      }
+    }, [delInfo])
+
   return (
     <div className="finder">
       {entityInfo.map((file, index) => (
@@ -64,7 +80,16 @@ function Finder() {
                 {file.size} &nbsp;Mo
               </div>
             </div>
-            <div className="fileAction mouseClick"  onClick={(e) => {console.log("ouioui");spawnConfirmPopup("oui oui la popup", () => alert("prout yes"), e)}}>
+            <div className="fileAction mouseClick" data-path={file.path} onClick={(e) => 
+              {
+                const dataPath = e.currentTarget.dataset.path;
+                spawnConfirmPopup("Delete this element ?", 
+                  () => {
+                    del_action(dataPath as string)
+                  },
+                  e)
+              }
+            }>
               <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
             </div>
           </div>

@@ -40,10 +40,7 @@ let setPopupState: ((state: PopupState) => void) | null = null;
 // **Global Function to Spawn the Popup**
 export function spawnConfirmPopup(message: string, onYes: () => void, event: React.MouseEvent) {
   if (setPopupState) {
-    console.log("spawn function");
-    console.log(event.target);
     const rect = (event.target as HTMLElement).getBoundingClientRect();
-    console.log(rect);
     setPopupState({
       message,
       onYes,

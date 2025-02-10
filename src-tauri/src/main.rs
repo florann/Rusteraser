@@ -122,8 +122,8 @@ fn cmd_rmdir(str: String, app_handler: tauri::AppHandle){
 }
 
 #[tauri::command]
-fn cmd_del(str: String, app_handler: tauri::AppHandle){
-    let result = del(str);
+fn cmd_del(path: String, app_handler: tauri::AppHandle){
+    let result = del(path);
     app_handler.emit_all("event-del", result).unwrap();
 }
 
