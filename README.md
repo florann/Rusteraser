@@ -1,2 +1,2 @@
 # Rusteraser
-Software to manage disk storage on Windows environnement
+Prototype of Software disk management, to use Rust with the framework Tauri
